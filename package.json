@@ -1,0 +1,72 @@
+{
+  "name": "react-bash",
+  "version": "1.0.0",
+  "description": "A configurable/extendable bash terminal component",
+  "main": "lib/index.js",
+  "jsnext:main": "es/index.js",
+  "scripts": {
+    "clean": "rimraf lib dist es",
+    "lint": "eslint src tests",
+    "start": "cd demo && node server.js",
+    "test": "cross-env BABEL_ENV=commonjs mocha --compilers js:babel-core/register --reporter spec tests/*.js",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
+    "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack src/index.js dist/react-bash.js",
+    "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-bash.min.js",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "prepublish": "npm run clean && npm run lint && npm run build"
+  },
+  "authors": [
+    "Zack Argyle <zack.argyle@gmail.com> (https://github.com/zackargyle)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zackargyle/react-bash.git"
+  },
+  "dependencies": {
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-core": "^6.6.5",
+    "babel-loader": "^6.2.2",
+    "babel-polyfill": "^6.5.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "chai": "^3.2.0",
+    "cross-env": "^1.0.7",
+    "enzyme": "^2.3.0",
+    "eslint": "^2.11.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.2.3",
+    "eslint-plugin-react": "^5.1.1",
+    "mocha": "^2.2.5",
+    "react-addons-test-utils": "^15.1.0",
+    "rimraf": "^2.5.2",
+    "sinon": "^1.17.4",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "bash",
+    "terminal",
+    "shell"
+  ],
+  "bugs": {
+    "url": "https://github.com/zackargyle/react-bash/issues"
+  },
+  "npmName": "react-bash",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": [
+        "*.js"
+      ]
+    }
+  ],
+  "license": "MIT"
+}

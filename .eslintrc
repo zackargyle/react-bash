@@ -1,0 +1,23 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "indent": ["error", 4],
+        "react/jsx-indent": [2, 4],
+        "arrow-body-style": 0,
+        "no-else-return": 0,
+        "no-param-reassign": 0,
+        "space-before-function-paren": 0,
+        "max-len": 0,
+        "func-names": 0,
+        "prefer-template": 0,
+        "padded-blocks": 0
+    },
+    "globals": {
+        "beforeEach": true,
+        "describe": true,
+        "it": true
+    },
+    "plugins": [
+        "react"
+    ]
+}
