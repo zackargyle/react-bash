@@ -3,6 +3,7 @@
     "rules": {
         "indent": ["error", 4],
         "react/jsx-indent": [2, 4],
+        "react/prefer-stateless-function": 0,
         "arrow-body-style": 0,
         "no-else-return": 0,
         "no-param-reassign": 0,
