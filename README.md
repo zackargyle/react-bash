@@ -8,6 +8,8 @@ It provides a simple interface for adding a terminal to your application. The te
 npm install --save react-bash
 ```
 
+Try out the [DEMO](http://zackargyle.github.io/react-bash/)
+
 ![](https://raw.githubusercontent.com/zackargyle/react-bash/master/demo/screenshot.png)
 
 ### Props

@@ -13,7 +13,9 @@
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack src/index.js dist/react-bash.js",
     "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-bash.min.js",
+    "build:demo": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack demo/index.js demo/dist/react-bash.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "gh-pages": "npm run build:demo && git add -f demo/dist && git commit -m \"deploy to gh-pages\" && git subtree split --prefix demo -b gh-pages && git push -f origin gh-pages:gh-pages && git branch -D gh-pages",
     "prepublish": "npm run clean && npm run lint && npm run build"
   },
   "authors": [
