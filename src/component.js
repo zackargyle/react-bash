@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Bash from './bash';
+import Prefix from './prefix';
 import * as Styles from './styles';
 
 const CTRL_CHAR_CODE = 17;
@@ -7,14 +8,6 @@ const L_CHAR_CODE = 76;
 const UP_CHAR_CODE = 38;
 const DOWN_CHAR_CODE = 40;
 const TAB_CHAR_CODE = 9;
-
-const Prefix = ({ cwd }) => (
-    <span style={Styles.prefix}>{`hacker@pinterest ~${cwd} $`}</span>
-);
-
-Prefix.propTypes = {
-    cwd: PropTypes.string.isRequired,
-};
 
 export default class ReactBash extends Component {
 
@@ -29,6 +22,7 @@ export default class ReactBash extends Component {
         };
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.renderHistoryItem = this.renderHistoryItem.bind(this);
     }
 
     componentDidMount() {
@@ -110,11 +104,14 @@ export default class ReactBash extends Component {
     }
 
     renderHistoryItem(item, key) {
-        const prefix = item.hasOwnProperty('cwd') ? <Prefix cwd={item.cwd} /> : undefined;
+        const prefix = item.hasOwnProperty('cwd') ? (
+            <Prefix cwd={item.cwd} prefix={this.props.prefix} />
+        ) : undefined;
         return <div data-test-id={`history-${key}`} key={key} >{prefix}{item.value}</div>;
     }
 
     render() {
+        const { prefix } = this.props;
         const { history, cwd } = this.state;
         return (
             <div className="ReactBash" style={Styles.ReactBash}>
@@ -126,7 +123,7 @@ export default class ReactBash extends Component {
                 <div style={Styles.body} onClick={() => this.refs.input.focus()}>
                     {history.map(this.renderHistoryItem)}
                     <form onSubmit={evt => this.handleSubmit(evt)} style={Styles.form}>
-                        <Prefix cwd={cwd} />
+                        <Prefix cwd={cwd} prefix={prefix} />
                         <input
                           autoComplete="off"
                           onKeyDown={this.handleKeyDown}
@@ -145,12 +142,14 @@ ReactBash.propTypes = {
     extensions: PropTypes.object,
     history: PropTypes.array,
     structure: PropTypes.object,
+    prefix: PropTypes.string,
 };
 
 ReactBash.defaultProps = {
     extensions: {},
     history: [],
     structure: {},
+    prefix: 'hacker@default',
 };
 
 /*

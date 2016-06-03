@@ -16,6 +16,7 @@ prop         | description
 `extensions` | An object of bash command extensions
 `history`    | An array of initial history items
 `structure`  | An object representing the file system
+`prefix`     | The string used to prefix commands in history: defaults to `hacker@default`
 
 ### Extending the command list
 The `extension` prop is an easy way to extend the bash commands that can be parsed from the terminal input. In essence, each command is a state reducer returning a new terminal state. This provides a lot of flexibility. Each command has access to the `structure`, `history`, and `cwd`, and expects the object returned to be applied in `setState` of the React component. Note that each extension should keep the state immutable, otherwise the component will not update. Check out the code for the `clear` command as an example.

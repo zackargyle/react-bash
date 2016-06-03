@@ -4,6 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import ReactBash from '../src/index';
+import Prefix from '../src/prefix';
 
 const baseEvent = { preventDefault: () => {} };
 
@@ -35,6 +36,16 @@ describe('ReactBash component', () => {
             const wrapper = shallow(<ReactBash structure={structure} />);
             const state = wrapper.state();
             chai.assert.deepEqual(state.structure, structure);
+        });
+
+        it('should use the `prefix` prop in history and in the form', () => {
+            const prefix = 'foo@bar';
+            const history = [{ cwd: 'test', value: 'foo' }];
+            const wrapper = shallow(<ReactBash prefix={prefix} history={history} />);
+            const historyPrefix = wrapper.find('div[data-test-id="history-0"]').find(Prefix);
+            const formPrefix = wrapper.find('form').find(Prefix);
+            chai.assert.deepEqual(historyPrefix.props().prefix, prefix);
+            chai.assert.deepEqual(formPrefix.props().prefix, prefix);
         });
     });
 
