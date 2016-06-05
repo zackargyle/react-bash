@@ -229,4 +229,26 @@ describe('bash commands', () => {
 
     });
 
+    describe('cd', () => {
+        it('should exist', () => {
+            chai.assert.isFunction(bash.commands.pwd.exec);
+        });
+
+        it('should print out cwd', () => {
+            const state = stateFactory();
+            const expected = '/dir1/childDir';
+            state.cwd = 'dir1/childDir';
+            const { history } = bash.commands.pwd.exec(state);
+            chai.assert.strictEqual(history[history.length - 1].value, expected);
+        });
+
+        it('should print out "/" for empty path', () => {
+            const state = stateFactory();
+            const expected = '/';
+            state.cwd = '';
+            const { history } = bash.commands.pwd.exec(state);
+            chai.assert.strictEqual(history[history.length - 1].value, expected);
+        });
+    });
+
 });
