@@ -151,14 +151,3 @@ ReactBash.defaultProps = {
     structure: {},
     prefix: 'hacker@default',
 };
-
-/*
-    - make story
-    - disable React developer tools
-    - "echo $PATH"
-    - "exit"
-    - grep
-    - tail
-    - whoami
-    - text formatting
-*/

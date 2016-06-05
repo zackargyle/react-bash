@@ -1,8 +1,6 @@
-# ReactBash
+# \<ReactBash /\>
 
-ReactBash is a configurable/extendable bash terminal component.  
-
-It provides a simple interface for adding a terminal to your application. The terminal has a few built in base commands, and allows a simple means of extending the understandable commands. It boasts things like autocomplete on tab, previous command navigation, and a test suite you can trust. It is easy to install and get started.
+ReactBash is a configurable / extendable bash terminal component. It provides an easy way of adding a terminal to your application. The terminal has a few built in base commands, and allows a simple means of extending the understandable commands. It boasts things like autocomplete on tab, previous command navigation, and a test suite you can trust. It is easy to install and get started.
 
 ```
 npm install --save react-bash
@@ -21,23 +19,23 @@ prop         | description
 `prefix`     | The string used to prefix commands in history: defaults to `hacker@default`
 
 ### Extending the command list
-The `extension` prop is an easy way to extend the bash commands that can be parsed from the terminal input. In essence, each command is a state reducer returning a new terminal state. This provides a lot of flexibility. Each command has access to the `structure`, `history`, and `cwd`, and expects the object returned to be applied in `setState` of the React component. Note that each extension should keep the state immutable, otherwise the component will not update. Check out the code for the `clear` command as an example.
+The `extension` prop is an easy way to extend the bash commands that can be parsed from the terminal input. In essence, each command is a state reducer returning a new terminal state. This provides a lot of flexibility. Each command has access to the `structure`, `history`, and `cwd`, and expects the object returned to be applied in `setState` of the React component. Note that each extension should keep the state immutable, otherwise the component will not update. If we were to extend the commands with and existing command like 'clear, here's how we could do it.
 
 ```js
 export const clear = {
-    exec: ({ structure, history, cwd }) => {
+    exec: ({ structure, history, cwd }, args) => {
         return { structure, cwd, history: [] };
     },
 };
+const extensions = { clear };
+<ReactBash extensions={extensions} />
 ```
 
-Some commands can use optional or required arguments. ReactBash uses the [yargs](https://www.npmjs.com/package/yargs) approach provides an `args` object to each command. There are three types of arguments: `anonymous` args, `boolean` args (--), and `named` args (-). As an example of how ReactBash parses the commands, check out this fictional example that utilizes all three in order.
+Each command is given the `state` and a parsed `args` object. Some commands can use optional or required arguments. ReactBash uses the [yargs](https://www.npmjs.com/package/yargs) approach. There are three types of arguments: `anonymous` args, `boolean` args (--), and `named` args (-). You can also alias commands for shorthands or multiple ways of writing the same argument (see the ls command for an example). To see how ReactBash parses the input, check out this fictional example that utilizes all three in order.
 
+For the input `foo some/path --bar -hello world`, ReactBash would parse the input as:
 ```js
-const input = 'foo some/path --bar -hello world';
-const { command, args } = bash.parseInput(input);
-
-command === 'foo'
+command = 'foo'
 args = {
     0: 'some/path',
     bar: true,
@@ -46,7 +44,7 @@ args = {
 ```
 
 ### History
-The history prop and state arrays are lists of items that will be displayed as history items in the terminal. If you'd like to add a welcome message to the initial state of the terminal, it's as easy as passing in a prop.
+The history prop and state arrays are lists of items that will be displayed as history items in the terminal. Essentially, anything that gets 'printed' out onto the terminal is a `history` item. The `prefix` prop is available to alter the bash user info that prepends commands in the history. If you'd like to add a welcome message to the initial state of the terminal, it's as easy as passing in a prop.
 
 ```js
 const history = [{ value: 'Welcome to the terminal!' }];
@@ -58,15 +56,19 @@ The structure object is a representation of the "file system" found within the t
 
 ```js
 const structure = {
-    rootDir: {
-        file1: { content: 'File1 in rootDir' },
-        file2: { content: 'File2 in rootDir' },
+    src: {
+        file1: { content: 'This is the text content for <file1> of <src>' },
+        file2: { content: 'This is the text content for <file2> of <src>' },
         childDir1: {
-            file: { content: 'File in rootDir/childDir1' },
+            file: { content: 'This is the text content for <file> of <src/childDir1>' },
         },
-        childDir2: {}
+        childDir2: {
+        }
     },
-    rootFile: { content: 'Contents for the root file' },
+    '.hiddenDir': {
+    },
+    '.hiddenFile': { content: 'This is a hidden file' },
+    file: { content: 'This is the text content for <file> of the root directory' },
 };
 
 ```
@@ -81,6 +83,13 @@ script         | description
 ### Patrons
 Be the first to contribute!
 ✌⊂(✰‿✰)つ✌
+
+**Some ideas for contributions:**
+* Add `echo` command with environment variables?
+* Add `grep` command that walks/searches the `structure`
+* Add `whoami` command
+* Add handles for the three circles at the top left of the terminal
+* Add multiline support / text formatting for `cat`
 
 ## License
 [MIT](http://isekivacenz.mit-license.org/)
