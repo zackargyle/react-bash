@@ -4,6 +4,7 @@ import Styles from './styles';
 
 const CTRL_CHAR_CODE = 17;
 const L_CHAR_CODE = 76;
+const C_CHAR_CODE = 67;
 const UP_CHAR_CODE = 38;
 const DOWN_CHAR_CODE = 40;
 const TAB_CHAR_CODE = 9;
@@ -67,6 +68,7 @@ export default class Terminal extends Component {
      *
      * -- Supported hot keys --
      * ctrl + l : clear
+     * ctrl + c : cancel current command
      * up - prev command from history
      * down - next command from history
      * tab - autocomplete
@@ -75,6 +77,10 @@ export default class Terminal extends Component {
         if (evt.which === L_CHAR_CODE) {
             if (this.ctrlPressed) {
                 this.setState(this.Bash.execute('clear', this.state));
+            }
+        } else if (evt.which === C_CHAR_CODE) {
+            if (this.ctrlPressed) {
+                this.refs.input.value = '';
             }
         } else if (evt.which === UP_CHAR_CODE) {
             if (this.Bash.hasPrevCommand()) {
