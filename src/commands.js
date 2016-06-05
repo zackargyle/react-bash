@@ -92,7 +92,7 @@ export const cd = {
     exec: (state, args) => {
         const { history, structure, cwd } = state;
         const path = args[0];
-        if (!path) {
+        if (!path || path === '/') {
             return { structure, history, cwd: '' };
         }
 
@@ -104,5 +104,17 @@ export const cd = {
         } else {
             return { history, structure, cwd: fullPath };
         }
+    },
+};
+
+export const pwd = {
+    exec: (state) => {
+        const { history, structure, cwd } = state;
+        const directory = `/${cwd}`;
+
+        return {
+            cwd, structure,
+            history: history.concat({ value: directory }),
+        };
     },
 };

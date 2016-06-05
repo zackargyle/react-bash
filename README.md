@@ -81,8 +81,10 @@ script         | description
 `npm run lint` | run the linter
 
 ### Patrons
-Be the first to contribute!
-✌⊂(✰‿✰)つ✌
+* [Derek Stavis](https://github.com/derekstavis)
+
+>Be the second to contribute!
+>✌⊂(✰‿✰)つ✌
 
 **Some ideas for contributions:**
 * Add `echo` command with environment variables?
