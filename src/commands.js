@@ -22,6 +22,9 @@ export const clear = {
 };
 
 export const ls = {
+    aliases: {
+        '-a': '--all',
+    },
     exec: (state, args) => {
         const { history, structure, cwd } = state;
         const path = args[0] || '';
@@ -31,10 +34,12 @@ export const ls = {
         if (err) {
             return Util.reportError(state, err, path);
         } else {
+            let content = Object.keys(dir);
+            if (!args.all) {
+                content = content.filter(name => name[0] !== '.');
+            }
             return { structure, cwd,
-                history: history.concat({
-                    value: Object.keys(dir).join(' '),
-                }),
+                history: history.concat({ value: content.join(' ') }),
             };
         }
     },

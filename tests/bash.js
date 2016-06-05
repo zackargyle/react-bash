@@ -120,6 +120,11 @@ describe('bash class methods', () => {
             chai.assert.strictEqual(args.test2, true);
         });
 
+        it('should handle aliases', () => {
+            const { args } = bash.parseInput('ls -a');
+            chai.assert.strictEqual(args.all, true);
+        });
+
     });
 
     describe('getPrevCommand', () => {

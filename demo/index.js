@@ -18,12 +18,13 @@ const history = [
 ];
 
 const structure = {
-    private: {
+    '.private': {
         file1: { content: 'File1 in private' },
         file2: { content: 'File2 in private' },
         dir2: {
             file: { content: 'File in private/dir2' },
         },
+        '.secrets': { content: 'I\'m still afraid of the dark...' },
     },
     public: {
         file1: { content: 'File2 in public' },

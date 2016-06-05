@@ -49,8 +49,18 @@ describe('bash commands', () => {
 
         it('should handle no args', () => {
             const state = stateFactory();
-            const expected = Object.keys(state.structure).join(' ');
+            const expected = Object.keys(state.structure)
+                .filter(name => name[0] !== '.')
+                .join(' ');
             const { history } = bash.commands.ls.exec(state, {});
+            chai.assert.strictEqual(history.length, 1);
+            chai.assert.strictEqual(history[0].value, expected);
+        });
+
+        it('should handle --all arg', () => {
+            const state = stateFactory();
+            const expected = Object.keys(state.structure).join(' ');
+            const { history } = bash.commands.ls.exec(state, { all: true });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });

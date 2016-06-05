@@ -33,12 +33,20 @@ export default class Bash {
     parseInput(input) {
         const tokens = input.trim().split(/ +/);
         const command = tokens.shift();
+
+        // Short circuit if command doesn't exist
+        if (!this.commands[command]) return { command };
+
+        const aliases = this.commands[command].aliases || {};
         const args = {};
         let anonArgPos = 0;
 
         while (tokens.length > 0) {
-            const token = tokens.shift();
+            let token = tokens.shift();
             if (token[0] === '-') {
+                if (aliases[token]) {
+                    token = aliases[token];
+                }
                 if (token[1] === '-') {
                     args[token.substr(2)] = true;
                 } else {
