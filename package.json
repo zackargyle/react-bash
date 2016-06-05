@@ -1,6 +1,6 @@
 {
   "name": "react-bash",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A configurable/extendable bash terminal component",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
