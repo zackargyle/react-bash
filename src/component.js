@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Bash from './bash';
-import Prefix from './prefix';
-import * as Styles from './styles';
+import Styles from './styles';
 
 const CTRL_CHAR_CODE = 17;
 const L_CHAR_CODE = 76;
@@ -9,7 +8,7 @@ const UP_CHAR_CODE = 38;
 const DOWN_CHAR_CODE = 40;
 const TAB_CHAR_CODE = 9;
 
-export default class ReactBash extends Component {
+export default class Terminal extends Component {
 
     constructor({ history, structure, extensions }) {
         super();
@@ -22,7 +21,6 @@ export default class ReactBash extends Component {
         };
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
-        this.renderHistoryItem = this.renderHistoryItem.bind(this);
     }
 
     componentDidMount() {
@@ -103,33 +101,36 @@ export default class ReactBash extends Component {
         this.refs.input.value = '';
     }
 
-    renderHistoryItem(item, key) {
-        const prefix = item.hasOwnProperty('cwd') ? (
-            <Prefix cwd={item.cwd} prefix={this.props.prefix} />
-        ) : undefined;
-        return <div data-test-id={`history-${key}`} key={key} >{prefix}{item.value}</div>;
+    renderHistoryItem(style) {
+        return (item, key) => {
+            const prefix = item.hasOwnProperty('cwd') ? (
+                <span style={style.prefix}>{`${this.props.prefix} ~${item.cwd} $`}</span>
+            ) : undefined;
+            return <div data-test-id={`history-${key}`} key={key} >{prefix}{item.value}</div>;
+        };
     }
 
     render() {
-        const { prefix } = this.props;
+        const { prefix, theme } = this.props;
         const { history, cwd } = this.state;
+        const style = Styles[theme] || Styles.light;
         return (
-            <div className="ReactBash" style={Styles.ReactBash}>
-                <div style={Styles.header}>
-                    <span style={Styles.redCircle}></span>
-                    <span style={Styles.yellowCircle}></span>
-                    <span style={Styles.greenCircle}></span>
+            <div className="ReactBash" style={style.ReactBash}>
+                <div style={style.header}>
+                    <span style={style.redCircle}></span>
+                    <span style={style.yellowCircle}></span>
+                    <span style={style.greenCircle}></span>
                 </div>
-                <div style={Styles.body} onClick={() => this.refs.input.focus()}>
-                    {history.map(this.renderHistoryItem)}
-                    <form onSubmit={evt => this.handleSubmit(evt)} style={Styles.form}>
-                        <Prefix cwd={cwd} prefix={prefix} />
+                <div style={style.body} onClick={() => this.refs.input.focus()}>
+                    {history.map(this.renderHistoryItem(style))}
+                    <form onSubmit={evt => this.handleSubmit(evt)} style={style.form}>
+                        <span style={style.prefix}>{`${prefix} ~${cwd} $`}</span>
                         <input
                           autoComplete="off"
                           onKeyDown={this.handleKeyDown}
                           onKeyUp={this.handleKeyUp}
                           ref="input"
-                          style={Styles.input}
+                          style={style.input}
                         />
                     </form>
                 </div>
@@ -138,16 +139,23 @@ export default class ReactBash extends Component {
     }
 }
 
-ReactBash.propTypes = {
-    extensions: PropTypes.object,
-    history: PropTypes.array,
-    structure: PropTypes.object,
-    prefix: PropTypes.string,
+Terminal.Themes = {
+    LIGHT: 'light',
+    DARK: 'dark',
 };
 
-ReactBash.defaultProps = {
+Terminal.propTypes = {
+    extensions: PropTypes.object,
+    history: PropTypes.array,
+    prefix: PropTypes.string,
+    structure: PropTypes.object,
+    theme: PropTypes.string,
+};
+
+Terminal.defaultProps = {
     extensions: {},
     history: [],
-    structure: {},
     prefix: 'hacker@default',
+    structure: {},
+    theme: Terminal.Themes.LIGHT,
 };

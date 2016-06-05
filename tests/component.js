@@ -3,29 +3,28 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import ReactBash from '../src/index';
-import Prefix from '../src/prefix';
+import Terminal from '../src/index';
 
 const baseEvent = { preventDefault: () => {} };
 
 describe('ReactBash component', () => {
 
     it('should render with only a structure', () => {
-        const wrapper = shallow(<ReactBash />);
+        const wrapper = shallow(<Terminal />);
         chai.assert.isDefined(wrapper);
     });
 
     describe('props', () => {
         it('should utilize the history items passed in', () => {
             const history = [{ value: 'Foo' }];
-            const wrapper = shallow(<ReactBash history={history} />);
+            const wrapper = shallow(<Terminal history={history} />);
             const item = wrapper.find('div[data-test-id="history-0"]');
             chai.assert.strictEqual(item.text(), 'Foo');
         });
 
         it('should extend the BaseCommands with extensions', () => {
             const extensions = { foo: { exec: () => {} } };
-            const wrapper = shallow(<ReactBash extensions={extensions} />);
+            const wrapper = shallow(<Terminal extensions={extensions} />);
             const commands = wrapper.instance().Bash.commands;
             chai.assert.isDefined(commands.ls);
             chai.assert.isDefined(commands.foo);
@@ -33,26 +32,27 @@ describe('ReactBash component', () => {
 
         it('should pass the file structure to bash', () => {
             const structure = { dir: {}, file: { content: 'Foo' } };
-            const wrapper = shallow(<ReactBash structure={structure} />);
+            const wrapper = shallow(<Terminal structure={structure} />);
             const state = wrapper.state();
             chai.assert.deepEqual(state.structure, structure);
         });
 
         it('should use the `prefix` prop in history and in the form', () => {
             const prefix = 'foo@bar';
-            const history = [{ cwd: 'test', value: 'foo' }];
-            const wrapper = shallow(<ReactBash prefix={prefix} history={history} />);
-            const historyPrefix = wrapper.find('div[data-test-id="history-0"]').find(Prefix);
-            const formPrefix = wrapper.find('form').find(Prefix);
-            chai.assert.deepEqual(historyPrefix.props().prefix, prefix);
-            chai.assert.deepEqual(formPrefix.props().prefix, prefix);
+            const item = { cwd: '', value: 'foo' };
+            const expected = `${prefix} ~${item.cwd} $`;
+            const wrapper = shallow(<Terminal prefix={prefix} history={[item]} />);
+            const historyPrefix = wrapper.find('div[data-test-id="history-0"]').childAt(0);
+            const formPrefix = wrapper.find('form').childAt(0);
+            chai.assert.deepEqual(historyPrefix.text(), expected);
+            chai.assert.deepEqual(formPrefix.text(), expected);
         });
     });
 
     describe('autocomplete', () => {
 
         it('should use Bash.autocomplete', () => {
-            const wrapper = shallow(<ReactBash />);
+            const wrapper = shallow(<Terminal />);
             const instance = wrapper.instance();
             instance.refs = { input: { value: '' } };
             const spy = sinon.spy(instance.Bash, 'autocomplete');
@@ -61,7 +61,7 @@ describe('ReactBash component', () => {
         });
 
         it('should update the input field', () => {
-            const wrapper = shallow(<ReactBash />);
+            const wrapper = shallow(<Terminal />);
             const instance = wrapper.instance();
             instance.refs = { input: { value: 'he' } };
             instance.attemptAutocomplete();
@@ -76,7 +76,7 @@ describe('ReactBash component', () => {
         let instance;
 
         beforeEach(() => {
-            wrapper = shallow(<ReactBash />);
+            wrapper = shallow(<Terminal />);
             instance = wrapper.instance();
             instance.refs = { input: { value: '' } };
         });
@@ -133,7 +133,7 @@ describe('ReactBash component', () => {
         let bashStub;
 
         beforeEach(() => {
-            wrapper = shallow(<ReactBash />);
+            wrapper = shallow(<Terminal />);
             instance = wrapper.instance();
             instance.refs = { input: { value: 'Foo' } };
             bashStub = sinon.stub(instance.Bash, 'execute').returns({ cwd: 'bar' });

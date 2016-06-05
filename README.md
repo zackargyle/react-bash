@@ -1,4 +1,4 @@
-# \<ReactBash /\>
+# \<Terminal /\>
 
 ReactBash is a configurable / extendable bash terminal component. It provides an easy way of adding a terminal to your application. The terminal has a few built in base commands, and allows a simple means of extending the understandable commands. It boasts things like autocomplete on tab, previous command navigation, and a test suite you can trust. It is easy to install and get started.
 
@@ -16,19 +16,23 @@ prop         | description
 `extensions` | An object of bash command extensions
 `history`    | An array of initial history items
 `structure`  | An object representing the file system
+`theme`      | A string representing which `theme` to use (Terminal.Themes.LIGHT, Terminal.Themes.DARK)
 `prefix`     | The string used to prefix commands in history: defaults to `hacker@default`
 
 ### Extending the command list
 The `extension` prop is an easy way to extend the bash commands that can be parsed from the terminal input. In essence, each command is a state reducer returning a new terminal state. This provides a lot of flexibility. Each command has access to the `structure`, `history`, and `cwd`, and expects the object returned to be applied in `setState` of the React component. Note that each extension should keep the state immutable, otherwise the component will not update. If we were to extend the commands with and existing command like 'clear, here's how we could do it.
 
 ```js
+import Terminal from 'react-bash';
+
 export const clear = {
     exec: ({ structure, history, cwd }, args) => {
         return { structure, cwd, history: [] };
     },
 };
+
 const extensions = { clear };
-<ReactBash extensions={extensions} />
+<Terminal extensions={extensions} />
 ```
 
 Each command is given the `state` and a parsed `args` object. Some commands can use optional or required arguments. ReactBash uses the [yargs](https://www.npmjs.com/package/yargs) approach. There are three types of arguments: `anonymous` args, `boolean` args (--), and `named` args (-). You can also alias commands for shorthands or multiple ways of writing the same argument (see the ls command for an example). To see how ReactBash parses the input, check out this fictional example that utilizes all three in order.
@@ -48,7 +52,7 @@ The history prop and state arrays are lists of items that will be displayed as h
 
 ```js
 const history = [{ value: 'Welcome to the terminal!' }];
-<ReactBash history={history}  />
+<Terminal history={history}  />
 ```
 
 ### Structure

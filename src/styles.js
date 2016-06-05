@@ -1,4 +1,6 @@
-export const ReactBash = {
+const BaseStyles = {};
+
+BaseStyles.ReactBash = {
     borderRadius: '5px',
     fontFamily: '\'Inconsolata\', monospace',
     fontSize: '13px',
@@ -7,12 +9,11 @@ export const ReactBash = {
     textAlign: 'left',
 };
 
-export const header = {
-    backgroundColor: '#eee',
+BaseStyles.header = {
     padding: '5px 10px 0',
 };
 
-export const circle = {
+const circle = {
     borderRadius: '50%',
     display: 'inline-block',
     height: '15px',
@@ -20,30 +21,28 @@ export const circle = {
     width: '15px',
 };
 
-export const redCircle = Object.assign({}, circle, {
+BaseStyles.redCircle = Object.assign({}, circle, {
     backgroundColor: '#bf616a',
 });
 
-export const yellowCircle = Object.assign({}, circle, {
+BaseStyles.yellowCircle = Object.assign({}, circle, {
     backgroundColor: '#ebcb8b',
 });
 
-export const greenCircle = Object.assign({}, circle, {
+BaseStyles.greenCircle = Object.assign({}, circle, {
     backgroundColor: '#a3be8c',
 });
 
-export const body = {
-    backgroundColor: '#fff',
-    color: '#5D5D5D',
+BaseStyles.body = {
     height: '400px',
     padding: '10px',
 };
 
-export const form = {
+BaseStyles.form = {
     display: 'flex',
 };
 
-export const input = {
+BaseStyles.input = {
     background: 'none',
     border: 'none',
     color: 'inherit',
@@ -54,7 +53,33 @@ export const input = {
     padding: '0',
 };
 
-export const prefix = {
-    color: '#bd081c',
+BaseStyles.prefix = {
     marginRight: '5px',
+};
+
+export default {
+    light: Object.assign({}, BaseStyles, {
+        body: Object.assign({}, BaseStyles.body, {
+            backgroundColor: '#fff',
+            color: '#5D5D5D',
+        }),
+        header: Object.assign({}, BaseStyles.header, {
+            backgroundColor: '#eee',
+        }),
+        prefix: Object.assign({}, BaseStyles.prefix, {
+            color: '#bd081c',
+        }),
+    }),
+    dark: Object.assign({}, BaseStyles, {
+        body: Object.assign({}, BaseStyles.body, {
+            backgroundColor: '#000',
+            color: '#d0d0d0',
+        }),
+        header: Object.assign({}, BaseStyles.header, {
+            backgroundColor: '#dcdbdb',
+        }),
+        prefix: Object.assign({}, BaseStyles.prefix, {
+            color: '#5b65fb',
+        }),
+    }),
 };
