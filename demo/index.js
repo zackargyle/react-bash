@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactBash from '../src/index';
+import Terminal from '../src/index';
 
 const extensions = {
     sudo: {
@@ -34,5 +34,5 @@ const structure = {
     'README.md': { content: '✌⊂(✰‿✰)つ✌ Thanks for checking out the tool! There is a lot that you can do with react-bash and I\'m excited to see all of the fun commands and projects build on top of it!' },
 };
 
-const Root = <ReactBash history={history} structure={structure} extensions={extensions} />;
+const Root = <Terminal history={history} structure={structure} extensions={extensions} />;
 ReactDOM.render(Root, document.getElementById('app'));

@@ -1,7 +1,7 @@
 import * as Util from './util';
 import { Errors } from './const';
 
-const commands = ['help', 'clear', 'ls', 'cat', 'mkdir', 'cd'];
+const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd'];
 
 export const help = {
     exec: ({ history, structure, cwd }) => {
@@ -9,7 +9,7 @@ export const help = {
             history: history.concat(
                 { value: 'React-bash:' },
                 { value: 'These shell commands are defined internally.  Type \'help\' to see this list.' },
-                ...commands.filter(value => value !== 'help').map(value => ({ value }))
+                ...helpCommands.map(value => ({ value }))
             ),
         };
     },
