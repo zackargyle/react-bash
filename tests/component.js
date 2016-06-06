@@ -110,6 +110,21 @@ describe('ReactBash component', () => {
             chai.assert.strictEqual(wrapper.state().history.length, 1);
         });
 
+        it('should clear command line on ctrl + c', () => {
+            const expected = '';
+            instance.refs.input.value = 'help';
+            wrapper.find('input').simulate('keydown', keyEvent(17));
+            wrapper.find('input').simulate('keyup', keyEvent(67));
+            chai.assert.strictEqual(instance.refs.input.value, expected);
+        });
+
+        it('should not clear command line on only c', () => {
+            const expected = 'help';
+            instance.refs.input.value = expected;
+            wrapper.find('input').simulate('keyup', keyEvent(67));
+            chai.assert.strictEqual(instance.refs.input.value, expected);
+        });
+
         it('should handle the up arrow', () => {
             sinon.stub(instance.Bash, 'hasPrevCommand').returns(true);
             sinon.stub(instance.Bash, 'getPrevCommand').returns('Foo');
