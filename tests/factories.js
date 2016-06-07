@@ -3,7 +3,9 @@ export function stateFactory(state = {}) {
     return {
         cwd: state.cwd || '',
         structure: state.structure || {
-            '.privateDir': {},
+            '.privateDir': {
+                childDir: {},
+            },
             '.privateFile': { content: 'Private File contents' },
             file1: { content: 'file1' },
             dir1: {

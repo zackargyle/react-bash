@@ -61,6 +61,16 @@ describe('util method', () => {
             chai.assert.strictEqual(path, 'testPath');
         });
 
+        it('should handle .. paths with hidden directories', () => {
+            const path = Util.extractPath('../dir1', '.privateDir');
+            chai.assert.strictEqual(path, 'dir1');
+        });
+
+        it('should handle double ../../ paths with hidden directories', () => {
+            const path = Util.extractPath('../../dir1', '.privateDir/childDir');
+            chai.assert.strictEqual(path, 'dir1');
+        });
+
     });
 
     describe('getDirectoryByPath', () => {

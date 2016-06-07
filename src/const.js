@@ -1,4 +1,4 @@
-export const BACK_REGEX = /\/?[\w-_]+\/\.\./;
+export const BACK_REGEX = /\/?\.?[\w-_]+\/\.\./;
 
 export const Errors = {
     COMMAND_NOT_FOUND: '-bash: $1: command not found',
