@@ -56,7 +56,7 @@ export function getDirectoryByPath(structure, relativePath) {
         const key = path[i];
         const child = dir[key];
         if (child && typeof child === 'object') {
-            if (child.content) {
+            if (child.hasOwnProperty('content')) {
                 return { err: Errors.NOT_A_DIRECTORY.replace('$1', relativePath) };
             } else {
                 dir = child;

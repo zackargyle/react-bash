@@ -35,6 +35,7 @@ BaseStyles.greenCircle = Object.assign({}, circle, {
 
 BaseStyles.body = {
     height: '400px',
+    overflowY: 'scroll',
     padding: '10px',
 };
 

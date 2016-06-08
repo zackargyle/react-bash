@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import * as BaseCommands from './commands';
 import Bash from './bash';
 import Styles from './styles';
 
@@ -28,11 +29,24 @@ export default class Terminal extends Component {
         this.refs.input.focus();
     }
 
+    componentWillReceiveProps(props) {
+        if (props.extensions) {
+            this.Bash.commands = Object.assign(props.extensions, BaseCommands);
+        }
+    }
+
     /*
      * Utilize immutability
      */
     shouldComponentUpdate(nextProps, nextState) {
         return (this.state !== nextState) || (this.props !== nextProps);
+    }
+
+    /*
+     * Keep input in view on change
+     */
+    componentDidUpdate() {
+        this.refs.input.scrollIntoView();
     }
 
     /*

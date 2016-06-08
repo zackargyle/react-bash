@@ -57,7 +57,7 @@ export const cat = {
             return Util.reportError(state, err, path);
         } else if (!dir[fileName]) {
             return Util.reportError(state, Errors.NO_SUCH_FILE, path);
-        } else if (!dir[fileName].content) {
+        } else if (!dir[fileName].hasOwnProperty('content')) {
             return Util.reportError(state, Errors.IS_A_DIRECTORY, path);
         } else {
             return { cwd, structure,
