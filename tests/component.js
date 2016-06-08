@@ -78,7 +78,7 @@ describe('ReactBash component', () => {
         beforeEach(() => {
             wrapper = shallow(<Terminal />);
             instance = wrapper.instance();
-            instance.refs = { input: { value: '' } };
+            instance.refs = { input: { value: '', scrollIntoView: () => {} } };
         });
 
         it('should handle autocomplete on tab keydown', () => {
@@ -150,7 +150,7 @@ describe('ReactBash component', () => {
         beforeEach(() => {
             wrapper = shallow(<Terminal />);
             instance = wrapper.instance();
-            instance.refs = { input: { value: 'Foo' } };
+            instance.refs = { input: { value: 'Foo', scrollIntoView: () => {} } };
             bashStub = sinon.stub(instance.Bash, 'execute').returns({ cwd: 'bar' });
         });
 
