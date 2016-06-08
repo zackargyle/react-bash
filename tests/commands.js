@@ -1,8 +1,9 @@
 import chai from 'chai';
+import sinon from 'sinon';
 import { stateFactory } from './factories';
 import Bash from '../src/bash';
 import * as BaseCommands from '../src/commands';
-import { Errors } from '../src/const';
+import { Errors, Shells } from '../src/const';
 
 describe('bash commands', () => {
     let bash;
@@ -147,6 +148,40 @@ describe('bash commands', () => {
 
     });
 
+    describe('node', () => {
+
+        it('should exist', () => {
+            chai.assert.isFunction(bash.commands.node.exec);
+        });
+
+        it('should set `shell` state variable to Shells.NODE', () => {
+            const state = stateFactory();
+            const { shell } = bash.commands.node.exec(state, {});
+            chai.assert.strictEqual(shell, Shells.NODE);
+        });
+
+        it('should eval a file\'s contents', () => {
+            const state = stateFactory();
+            const expected = state.structure.file1.content;
+            const stub = sinon.stub(global, 'eval').returns(expected);
+            const { history } = bash.commands.node.exec(state, { 0: 'file1' });
+            chai.assert.strictEqual(history.length, 1);
+            chai.assert.strictEqual(history[0].value, `"${expected}"`);
+            stub.restore();
+        });
+
+        it('should eval a file\'s contents from path', () => {
+            const state = stateFactory();
+            const expected = state.structure.dir1.dir1File.content;
+            const stub = sinon.stub(global, 'eval').returns(expected);
+            const { history } = bash.commands.node.exec(state, { 0: 'dir1/dir1File' });
+            chai.assert.strictEqual(history.length, 1);
+            chai.assert.strictEqual(history[0].value, `"${expected}"`);
+            stub.restore();
+        });
+
+    });
+
     describe('mkdir', () => {
 
         it('should exist', () => {
@@ -229,7 +264,7 @@ describe('bash commands', () => {
 
     });
 
-    describe('cd', () => {
+    describe('pwd', () => {
         it('should exist', () => {
             chai.assert.isFunction(bash.commands.pwd.exec);
         });

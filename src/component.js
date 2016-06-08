@@ -95,6 +95,9 @@ export default class Terminal extends Component {
         } else if (evt.which === C_CHAR_CODE) {
             if (this.ctrlPressed) {
                 this.refs.input.value = '';
+                if (this.state.shell) {
+                    this.setState({ shell: null });
+                }
             }
         } else if (evt.which === UP_CHAR_CODE) {
             if (this.Bash.hasPrevCommand()) {
@@ -116,8 +119,11 @@ export default class Terminal extends Component {
 
         // Execute command
         const input = evt.target[0].value;
-        const newState = this.Bash.execute(input, this.state);
-        this.setState(newState);
+        if (this.state.shell) {
+            this.setState(this.Bash.executeShell(input, this.state));
+        } else {
+            this.setState(this.Bash.execute(input, this.state));
+        }
         this.refs.input.value = '';
     }
 
@@ -132,7 +138,7 @@ export default class Terminal extends Component {
 
     render() {
         const { prefix, theme } = this.props;
-        const { history, cwd } = this.state;
+        const { history, cwd, shell } = this.state;
         const style = Styles[theme] || Styles.light;
         return (
             <div className="ReactBash" style={style.ReactBash}>
@@ -144,7 +150,9 @@ export default class Terminal extends Component {
                 <div style={style.body} onClick={() => this.refs.input.focus()}>
                     {history.map(this.renderHistoryItem(style))}
                     <form onSubmit={evt => this.handleSubmit(evt)} style={style.form}>
-                        <span style={style.prefix}>{`${prefix} ~${cwd} $`}</span>
+                        {shell ? <span style={style.shell}>{'>'}</span> : (
+                            <span style={style.prefix}>{`${prefix} ~${cwd} $`}</span>
+                        )}
                         <input
                           autoComplete="off"
                           onKeyDown={this.handleKeyDown}

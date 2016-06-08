@@ -1,7 +1,7 @@
 import * as Util from './util';
-import { Errors } from './const';
+import { Errors, Shells } from './const';
 
-const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd'];
+const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd', 'node'];
 
 export const help = {
     exec: ({ history, structure, cwd }) => {
@@ -49,22 +49,30 @@ export const cat = {
     exec: (state, args) => {
         const { history, structure, cwd } = state;
         const path = args[0];
-        const relativePath = path.split('/');
-        const fileName = relativePath.pop();
-        const fullPath = Util.extractPath(relativePath.join('/'), cwd);
-        const { err, dir } = Util.getDirectoryByPath(structure, fullPath);
-        if (err) {
-            return Util.reportError(state, err, path);
-        } else if (!dir[fileName]) {
-            return Util.reportError(state, Errors.NO_SUCH_FILE, path);
-        } else if (!dir[fileName].hasOwnProperty('content')) {
-            return Util.reportError(state, Errors.IS_A_DIRECTORY, path);
-        } else {
+        return Util.getFile(path, state, file => {
             return { cwd, structure,
                 history: history.concat({
-                    value: dir[fileName].content,
+                    value: file.content,
                 }),
             };
+        });
+    },
+};
+
+export const node = {
+    exec: (state, args) => {
+        const { history, structure, cwd } = state;
+        const path = args[0];
+        if (path) {
+            return Util.getFile(path, state, file => {
+                return { cwd, structure,
+                    history: history.concat({
+                        value: Util.evaluate(file.content),
+                    }),
+                };
+            });
+        } else {
+            return { cwd, structure, history, shell: Shells.NODE };
         }
     },
 };
@@ -108,13 +116,11 @@ export const cd = {
 };
 
 export const pwd = {
-    exec: (state) => {
-        const { history, structure, cwd } = state;
-        const directory = `/${cwd}`;
-
+    exec: ({ history, structure, cwd }) => {
+        const value = `/${cwd}`;
         return {
             cwd, structure,
-            history: history.concat({ value: directory }),
+            history: history.concat({ value }),
         };
     },
 };

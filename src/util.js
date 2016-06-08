@@ -68,3 +68,28 @@ export function getDirectoryByPath(structure, relativePath) {
     }
     return { dir };
 }
+
+export function getFile(path, state, callback) {
+    const { structure, cwd } = state;
+    const relativePath = path.split('/');
+    const fileName = relativePath.pop();
+    const fullPath = extractPath(relativePath.join('/'), cwd);
+    const { err, dir } = getDirectoryByPath(structure, fullPath);
+    if (err) {
+        return reportError(state, err, path);
+    } else if (!dir[fileName]) {
+        return reportError(state, Errors.NO_SUCH_FILE, path);
+    } else if (!dir[fileName].hasOwnProperty('content')) {
+        return reportError(state, Errors.IS_A_DIRECTORY, path);
+    } else {
+        return callback(dir[fileName]);
+    }
+}
+
+export function evaluate(code) {
+    try {
+        return JSON.stringify(eval(code));
+    } catch (error) {
+        return `${error.name}: ${error.message}`;
+    }
+}

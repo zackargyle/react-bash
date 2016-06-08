@@ -54,7 +54,7 @@ BaseStyles.input = {
     padding: '0',
 };
 
-BaseStyles.prefix = {
+BaseStyles.prefix = BaseStyles.shell = {
     marginRight: '5px',
 };
 

@@ -7,3 +7,7 @@ export const Errors = {
     NOT_A_DIRECTORY: '-bash: cd: $1: Not a directory',
     IS_A_DIRECTORY: 'cat: $1: Is a directory',
 };
+
+export const Shells = {
+    NODE: 'NODE',
+};

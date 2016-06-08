@@ -30,6 +30,14 @@ export default class Bash {
         }
     }
 
+    executeShell(input, state) {
+        return Object.assign({}, state, {
+            history: state.history.concat({
+                value: Util.evaluate(input),
+            }),
+        });
+    }
+
     parseInput(input) {
         const tokens = input.trim().split(/ +/);
         const command = tokens.shift();
