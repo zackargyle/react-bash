@@ -54,10 +54,10 @@ export default class Terminal extends Component {
      * update the input.
      */
     attemptAutocomplete() {
-        const tokens = this.refs.input.value.split(/ +/);
-        const command = this.Bash.autocomplete(tokens.pop(), this.state);
-        if (command) {
-            this.refs.input.value = tokens.concat(command).join(' ');
+        const input = this.refs.input.value;
+        const suggestion = this.Bash.autocomplete(input, this.state);
+        if (suggestion) {
+            this.refs.input.value = suggestion;
         }
     }
 
