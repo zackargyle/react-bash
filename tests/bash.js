@@ -199,40 +199,52 @@ describe('bash class methods', () => {
             chai.assert.isFunction(bash.autocomplete);
         });
 
-        it('should autocomplete a directory name', () => {
-            const expected = 'dir1';
-            const actual = bash.autocomplete('di', mockState);
-            chai.assert.strictEqual(expected, actual);
-        });
-
-        it('should autocomplete a file name', () => {
-            const expected = 'file1';
-            const actual = bash.autocomplete('fil', mockState);
-            chai.assert.strictEqual(expected, actual);
-        });
-
         it('should autocomplete a command', () => {
             const expected = 'help';
             const actual = bash.autocomplete('he', mockState);
             chai.assert.strictEqual(expected, actual);
         });
 
+        it('should not autocomplete a path if input has only one token', () => {
+            const expected = null;
+            const actual = bash.autocomplete('dir', mockState);
+            chai.assert.strictEqual(expected, actual);
+        });
+
+        it('should not autocomplete a command if input has more than one token', () => {
+            const expected = null;
+            const actual = bash.autocomplete('ls he', mockState);
+            chai.assert.strictEqual(expected, actual);
+        });
+
+        it('should autocomplete a directory name', () => {
+            const expected = 'ls dir1';
+            const actual = bash.autocomplete('ls di', mockState);
+            chai.assert.strictEqual(expected, actual);
+        });
+
+        it('should autocomplete a file name', () => {
+            const expected = 'ls file1';
+            const actual = bash.autocomplete('ls fil', mockState);
+            chai.assert.strictEqual(expected, actual);
+        });
+
         it('should autocomplete a path', () => {
-            const expected = 'dir1/childDir';
-            const actual = bash.autocomplete('dir1/chi', mockState);
+            const expected = 'ls dir1/childDir';
+            const actual = bash.autocomplete('ls dir1/chi', mockState);
             chai.assert.strictEqual(expected, actual);
         });
 
         it('should not autocomplete commands on paths', () => {
             const expected = null;
-            const actual = bash.autocomplete('dir1/clea', mockState);
+            const actual = bash.autocomplete('ls dir1/clea', mockState);
             chai.assert.strictEqual(expected, actual);
         });
 
         it('should autocomplete a path with .. in it', () => {
-            const expected = '../../dir1';
+            const expected = 'ls ../../dir1';
             const state = Object.assign({}, mockState, { cwd: 'dir1/childDir' });
-            const actual = bash.autocomplete('../../dir', state);
+            const actual = bash.autocomplete('ls ../../dir', state);
             chai.assert.strictEqual(expected, actual);
         });
 
