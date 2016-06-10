@@ -1,6 +1,6 @@
 {
   "name": "react-bash",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A configurable/extendable bash terminal component",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
@@ -25,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/zackargyle/react-bash.git"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^0.14.8",
     "react-dom": "^0.14.8"
   },
@@ -69,6 +69,11 @@
         "*.js"
       ]
     }
+  ],
+  "files": [
+    "dist/",
+    "es/",
+    "lib/"
   ],
   "license": "MIT"
 }
