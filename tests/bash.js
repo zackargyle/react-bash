@@ -125,6 +125,12 @@ describe('bash class methods', () => {
             chai.assert.strictEqual(args.all, true);
         });
 
+        it('should handle array aliases', () => {
+            const { args } = bash.parseInput('ls -al');
+            chai.assert.strictEqual(args.all, true);
+            chai.assert.strictEqual(args.long, true);
+        });
+
     });
 
     describe('getPrevCommand', () => {

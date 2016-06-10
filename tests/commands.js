@@ -65,6 +65,13 @@ describe('bash commands', () => {
             chai.assert.strictEqual(history[0].value, expected);
         });
 
+        it('should handle --long arg', () => {
+            const state = stateFactory();
+            const expected = Object.keys(state.structure).length;
+            const { history } = bash.commands.ls.exec(state, { long: true, all: true });
+            chai.assert.strictEqual(history.length, expected);
+        });
+
         it('should handle a valid path arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure.dir1).join(' ');

@@ -23,6 +23,9 @@ export const clear = {
 
 export const ls = {
     aliases: {
+        '-l': '--long',
+        '-la': ['--long', '--all'],
+        '-al': ['--long', '--all'],
         '-a': '--all',
     },
     exec: (state, args) => {
@@ -38,9 +41,17 @@ export const ls = {
             if (!args.all) {
                 content = content.filter(name => name[0] !== '.');
             }
-            return { structure, cwd,
-                history: history.concat({ value: content.join(' ') }),
-            };
+            if (args.long) {
+                return { structure, cwd,
+                    history: history.concat(content.map(value => {
+                        return { value };
+                    })),
+                };
+            } else {
+                return { structure, cwd,
+                    history: history.concat({ value: content.join(' ') }),
+                };
+            }
         }
     },
 };

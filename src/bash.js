@@ -41,11 +41,12 @@ export default class Bash {
         const args = {};
         let anonArgPos = 0;
 
-        while (tokens.length > 0) {
-            let token = tokens.shift();
+        function parseToken(token) {
             if (token[0] === '-') {
                 if (aliases[token]) {
-                    token = aliases[token];
+                    const argTokens = [].concat(aliases[token]);
+                    argTokens.forEach(parseToken);
+                    return;
                 }
                 if (token[1] === '-') {
                     args[token.substr(2)] = true;
@@ -56,6 +57,10 @@ export default class Bash {
             } else {
                 args[anonArgPos++] = token;
             }
+        }
+
+        while (tokens.length > 0) {
+            parseToken(tokens.shift());
         }
         return { command, args };
     }
