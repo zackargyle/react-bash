@@ -51,7 +51,7 @@ BaseStyles.input = {
     fontFamily: 'inherit',
     fontSize: 'inherit',
     outline: 'none !important',
-    padding: '0',
+    padding: 0,
 };
 
 BaseStyles.prefix = {
