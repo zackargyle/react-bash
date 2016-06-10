@@ -23,7 +23,9 @@ export default class Bash {
         });
 
         const { command, args } = this.parseInput(input);
-        if (this.commands[command]) {
+        if (command === '') {
+            return newState;
+        } else if (this.commands[command]) {
             return this.commands[command].exec(newState, args);
         } else {
             return Util.reportError(newState, Errors.COMMAND_NOT_FOUND, input);

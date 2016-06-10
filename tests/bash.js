@@ -59,6 +59,12 @@ describe('bash class methods', () => {
             chai.assert.strictEqual(history[0].cwd, '');
         });
 
+        it('should not break on empty input', () => {
+            const { history } = bash.execute('', mockState);
+            chai.assert.strictEqual(history.length, 1);
+            chai.assert.strictEqual(history[0].value, '');
+        });
+
         // Full command testing is in tests/command.js
         const commands = [
             { command: 'help' },
