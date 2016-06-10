@@ -2,9 +2,12 @@ const BaseStyles = {};
 
 BaseStyles.ReactBash = {
     borderRadius: '5px',
+    display: 'flex',
+    flexDirection: 'column',
     fontFamily: '\'Inconsolata\', monospace',
     fontSize: '13px',
     fontWeight: '400',
+    height: '100%',
     overflow: 'hidden',
     textAlign: 'left',
 };
@@ -34,7 +37,7 @@ BaseStyles.greenCircle = Object.assign({}, circle, {
 });
 
 BaseStyles.body = {
-    height: '400px',
+    flexGrow: 1,
     overflowY: 'scroll',
     padding: '10px',
 };

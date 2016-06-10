@@ -9,6 +9,7 @@ const C_CHAR_CODE = 67;
 const UP_CHAR_CODE = 38;
 const DOWN_CHAR_CODE = 40;
 const TAB_CHAR_CODE = 9;
+const noop = () => {};
 
 export default class Terminal extends Component {
 
@@ -131,15 +132,15 @@ export default class Terminal extends Component {
     }
 
     render() {
-        const { prefix, theme } = this.props;
+        const { onClose, onExpand, onMinimize, prefix, theme } = this.props;
         const { history, cwd } = this.state;
         const style = Styles[theme] || Styles.light;
         return (
             <div className="ReactBash" style={style.ReactBash}>
                 <div style={style.header}>
-                    <span style={style.redCircle}></span>
-                    <span style={style.yellowCircle}></span>
-                    <span style={style.greenCircle}></span>
+                    <span style={style.redCircle} onClick={onClose}></span>
+                    <span style={style.yellowCircle} onClick={onMinimize}></span>
+                    <span style={style.greenCircle} onClick={onExpand}></span>
                 </div>
                 <div style={style.body} onClick={() => this.refs.input.focus()}>
                     {history.map(this.renderHistoryItem(style))}
@@ -167,6 +168,9 @@ Terminal.Themes = {
 Terminal.propTypes = {
     extensions: PropTypes.object,
     history: PropTypes.array,
+    onClose: PropTypes.func,
+    onExpand: PropTypes.func,
+    onMinimize: PropTypes.func,
     prefix: PropTypes.string,
     structure: PropTypes.object,
     theme: PropTypes.string,
@@ -175,6 +179,9 @@ Terminal.propTypes = {
 Terminal.defaultProps = {
     extensions: {},
     history: [],
+    onClose: noop,
+    onExpand: noop,
+    onMinimize: noop,
     prefix: 'hacker@default',
     structure: {},
     theme: Terminal.Themes.LIGHT,
