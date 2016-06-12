@@ -7,24 +7,24 @@ const state = stateFactory();
 
 describe('util method', () => {
 
-    describe('reportError', () => {
+    describe('appendError', () => {
 
         it('should exist', () => {
-            chai.assert.isFunction(Util.reportError);
+            chai.assert.isFunction(Util.appendError);
         });
 
         it('should immutably alter state', () => {
-            const newState = Util.reportError(state, '-$1-', 'test');
+            const newState = Util.appendError(state, '-$1-', 'test');
             chai.assert.notStrictEqual(state, newState);
         });
 
         it('should add error to history', () => {
-            const newState = Util.reportError(state, '-$1-', 'test');
+            const newState = Util.appendError(state, '-$1-', 'test');
             chai.assert.strictEqual(newState.history.length, state.history.length + 1);
         });
 
         it('should interpolate the command into error', () => {
-            const newState = Util.reportError(state, '-$1-', 'test');
+            const newState = Util.appendError(state, '-$1-', 'test');
             chai.assert.strictEqual(newState.history[0].value, '-test-');
         });
 

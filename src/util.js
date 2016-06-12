@@ -1,5 +1,13 @@
 import { Errors, BACK_REGEX } from './const';
 
+/*
+ * This is a utility method for trimming the beginning
+ * and ending of a string of any given char.
+ *
+ * @param {string} str - the string the trim
+ * @param {string} char - the char to remove
+ * @returns {string} the trimmed string
+ */
 export function trim(str, char) {
     if (str[0] === char) {
         str = str.substr(1);
@@ -10,8 +18,18 @@ export function trim(str, char) {
     return str;
 }
 
-export function reportError(state, error, command) {
+/*
+ * This is a utility method for appending an error
+ * message to the current state.
+ *
+ * @param {Object} state - the terminal state
+ * @param {string} error - the error to interpolate
+ * @param {string} command - the string to insert
+ * @returns {Object} the new terminal state
+ */
+export function appendError(state, error, command) {
     return Object.assign({}, state, {
+        error: true,
         history: state.history.concat({
             value: error.replace('$1', command),
         }),
@@ -19,9 +37,12 @@ export function reportError(state, error, command) {
 }
 
 /*
- * This is a utility method for chaining the relativePath
- * onto the rootPath. It includes backwards movement and
- * normalization.
+ * This is a utility method for appending a relative path
+ * to a root path. Handles trimming and backtracking.
+ *
+ * @param {string} relativePath
+ * @param {string} rootPath
+ * @returns {string} the combined path
  */
 export function extractPath(relativePath, rootPath) {
     // Short circuit for relative path
@@ -41,8 +62,12 @@ export function extractPath(relativePath, rootPath) {
 }
 
 /*
- * This is a utility method for traversing the <structure>
- * down the '/' separated <relativePath>
+ * This is a utility method for traversing the structure
+ * down the relative path.
+ *
+ * @param {Object} structure - the terminal file structure
+ * @param {string} relativePath - the path of the directory
+ * @returns {Object} the directory or error
  */
 export function getDirectoryByPath(structure, relativePath) {
     const path = relativePath.split('/');

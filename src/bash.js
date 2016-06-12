@@ -1,6 +1,7 @@
 import * as Util from './util';
 import { Errors } from './const';
 import * as BaseCommands from './commands';
+import * as BashParser from './parser';
 
 export default class Bash {
 
@@ -10,61 +11,66 @@ export default class Bash {
         this.prevCommandsIndex = 0;
     }
 
-    execute(input, state) {
+    /*
+     * This parses and executes the given <input> and returns an updated
+     * state object.
+     *
+     * @param {string} input - the user input
+     * @param {Object} state - the current terminal state
+     * @returns {Object} the new terminal state
+     */
+    execute(input, currentState) {
         this.prevCommands.push(input);
         this.prevCommandsIndex = this.prevCommands.length;
 
         // Append input to history
-        const newState = Object.assign({}, state, {
-            history: state.history.concat({
-                cwd: state.cwd,
+        const newState = Object.assign({}, currentState, {
+            history: currentState.history.concat({
+                cwd: currentState.cwd,
                 value: input,
             }),
         });
 
-        const { command, args } = this.parseInput(input);
-        if (command === '') {
-            return newState;
-        } else if (this.commands[command]) {
-            return this.commands[command].exec(newState, args);
-        } else {
-            return Util.reportError(newState, Errors.COMMAND_NOT_FOUND, input);
-        }
+        const commandList = BashParser.parse(input);
+        return this.runCommands(commandList, newState);
     }
 
-    parseInput(input) {
-        const tokens = input.trim().split(/ +/);
-        const command = tokens.shift();
+    /*
+     * This function executes a list of command lists. The outer list
+     * is a dependency list parsed from the `&&` operator. The inner lists
+     * are groups of commands parsed from the `;` operator. If any given
+     * command fails, the outer list will stop executing.
+     *
+     * @param {Array} commands - the commands to run
+     * @param {Object} state - the terminal state
+     * @returns {Object} the new terminal state
+     */
+    runCommands(commands, state) {
+        let errorOccurred = false;
 
-        // Short circuit if command doesn't exist
-        if (!this.commands[command]) return { command };
-
-        const aliases = this.commands[command].aliases || {};
-        const args = {};
-        let anonArgPos = 0;
-
-        function parseToken(token) {
-            if (token[0] === '-') {
-                if (aliases[token]) {
-                    const argTokens = [].concat(aliases[token]);
-                    argTokens.forEach(parseToken);
-                    return;
-                }
-                if (token[1] === '-') {
-                    args[token.substr(2)] = true;
-                } else {
-                    const next = tokens.shift();
-                    args[token.substr(1)] = next;
-                }
+        /*
+         * This function executes a single command and marks whether an error
+         * occurred. If an error occurs, the following dependent commands should
+         * not be run.
+         */
+        const reducer = (newState, { command, args }) => {
+            if (command === '') {
+                return newState;
+            } else if (this.commands[command]) {
+                const nextState = this.commands[command].exec(newState, args);
+                errorOccurred = errorOccurred || (nextState && nextState.error);
+                return nextState;
             } else {
-                args[anonArgPos++] = token;
+                errorOccurred = true;
+                return Util.appendError(newState, Errors.COMMAND_NOT_FOUND, command);
             }
-        }
+        };
 
-        while (tokens.length > 0) {
-            parseToken(tokens.shift());
+        while (!errorOccurred && commands.length) {
+            const dependentCommands = commands.shift();
+            state = dependentCommands.reduce(reducer, state);
         }
-        return { command, args };
+        return state;
     }
 
     /*
@@ -76,7 +82,6 @@ export default class Bash {
      * @param {Object} state - the terminal state
      * @param {Object} state.structure - the file structure
      * @param {string} state.cwd - the current working directory
-     *
      * @returns {?string} a suggested autocomplete for the <input>
      */
     autocomplete(input, { structure, cwd }) {

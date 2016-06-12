@@ -69,10 +69,10 @@ describe('bash class methods', () => {
         const commands = [
             { command: 'help' },
             { command: 'clear' },
-            { command: 'ls', args: { 0: 'dir1' } },
-            { command: 'cat', args: { 0: 'file1' } },
-            { command: 'mkdir', args: { 0: 'testDir' } },
-            { command: 'cd', args: { 0: 'dir1' } },
+            { command: 'ls', args: 'dir1' },
+            { command: 'cat', args: 'file1' },
+            { command: 'mkdir', args: 'testDir' },
+            { command: 'cd', args: 'dir1' },
         ];
 
         commands.forEach(data => {
@@ -91,50 +91,31 @@ describe('bash class methods', () => {
             chai.assert.strictEqual(history[1].value, expected);
         });
 
-    });
-
-    describe('parseInput', () => {
-
-        it('should exist', () => {
-            chai.assert.isFunction(bash.parseInput);
+        it('should only print the unknown command in error', () => {
+            const expected = Errors.COMMAND_NOT_FOUND.replace('$1', 'commandDoesNotExist');
+            const { history } = bash.execute('commandDoesNotExist -la test/file.txt', mockState);
+            chai.assert.strictEqual(history[1].value, expected);
         });
 
-        it('should handle a simple command', () => {
-            const { command } = bash.parseInput('ls');
-            chai.assert.strictEqual(command, 'ls');
+        it('should handle multiple commands with ;', () => {
+            const { history } = bash.execute('cd dir1; pwd', mockState);
+            chai.assert.strictEqual(history.length, 2);
+            chai.assert.strictEqual(history[1].value, '/dir1');
         });
 
-        it('should handle no args', () => {
-            const { args } = bash.parseInput('ls');
-            chai.assert.strictEqual(Object.keys(args).length, 0);
+        it('should handle multiple commands with successful &&', () => {
+            const { history } = bash.execute('cd dir1 && pwd', mockState);
+            chai.assert.strictEqual(history.length, 2);
+            chai.assert.strictEqual(history[1].value, '/dir1');
         });
 
-        it('should handle anonymous args', () => {
-            const { args } = bash.parseInput('ls arg1 arg2');
-            chai.assert.strictEqual(args[0], 'arg1');
-            chai.assert.strictEqual(args[1], 'arg2');
-        });
-
-        it('should handle named args', () => {
-            const { args } = bash.parseInput('ls -test arg');
-            chai.assert.strictEqual(args.test, 'arg');
-        });
-
-        it('should handle boolean args', () => {
-            const { args } = bash.parseInput('ls --test1 --test2');
-            chai.assert.strictEqual(args.test1, true);
-            chai.assert.strictEqual(args.test2, true);
-        });
-
-        it('should handle aliases', () => {
-            const { args } = bash.parseInput('ls -a');
-            chai.assert.strictEqual(args.all, true);
-        });
-
-        it('should handle array aliases', () => {
-            const { args } = bash.parseInput('ls -al');
-            chai.assert.strictEqual(args.all, true);
-            chai.assert.strictEqual(args.long, true);
+        it('should handle multiple commands with unsuccessful &&', () => {
+            const input = 'cd doesNotExist && pwd';
+            const expected1 = Errors.NO_SUCH_FILE.replace('$1', 'doesNotExist');
+            const { history } = bash.execute(input, mockState);
+            chai.assert.strictEqual(history.length, 2);
+            chai.assert.strictEqual(history[0].value, input);
+            chai.assert.strictEqual(history[1].value, expected1);
         });
 
     });

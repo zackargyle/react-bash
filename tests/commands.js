@@ -52,7 +52,7 @@ describe('bash commands', () => {
             const expected = Object.keys(state.structure)
                 .filter(name => name[0] !== '.')
                 .join(' ');
-            const { history } = bash.commands.ls.exec(state, {});
+            const { history } = bash.commands.ls.exec(state, { flags: {} });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -60,7 +60,8 @@ describe('bash commands', () => {
         it('should handle --all arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure).join(' ');
-            const { history } = bash.commands.ls.exec(state, { all: true });
+            const args = { flags: { a: true } };
+            const { history } = bash.commands.ls.exec(state, args);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -68,14 +69,16 @@ describe('bash commands', () => {
         it('should handle --long arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure).length;
-            const { history } = bash.commands.ls.exec(state, { long: true, all: true });
+            const args = { flags: { a: true, l: true } };
+            const { history } = bash.commands.ls.exec(state, args);
             chai.assert.strictEqual(history.length, expected);
         });
 
         it('should handle a valid path arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure.dir1).join(' ');
-            const { history } = bash.commands.ls.exec(state, { 0: 'dir1' });
+            const args = { flags: {}, 0: 'dir1' };
+            const { history } = bash.commands.ls.exec(state, args);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -83,7 +86,8 @@ describe('bash commands', () => {
         it('should handle a non existent path', () => {
             const state = stateFactory();
             const expected = Errors.NO_SUCH_FILE.replace('$1', 'doesNotExist');
-            const { history } = bash.commands.ls.exec(state, { 0: 'doesNotExist' });
+            const args = { flags: {}, 0: 'doesNotExist' };
+            const { history } = bash.commands.ls.exec(state, args);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -91,7 +95,8 @@ describe('bash commands', () => {
         it('should handle path to file', () => {
             const state = stateFactory();
             const expected = Errors.NOT_A_DIRECTORY.replace('$1', 'file1');
-            const { history } = bash.commands.ls.exec(state, { 0: 'file1' });
+            const args = { flags: {}, 0: 'file1' };
+            const { history } = bash.commands.ls.exec(state, args);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });

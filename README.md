@@ -35,15 +35,15 @@ const extensions = { clear };
 <Terminal extensions={extensions} />
 ```
 
-Each command is given the `state` and a parsed `args` object. Some commands can use optional or required arguments. ReactBash uses the [yargs](https://www.npmjs.com/package/yargs) approach. There are three types of arguments: `anonymous` args, `boolean` args (--), and `named` args (-). You can also alias commands for shorthands or multiple ways of writing the same argument (see the ls command for an example). To see how ReactBash parses the input, check out this fictional example that utilizes all three in order.
+Each command is given the `state` and a parsed `args` object. Some commands can use optional or required arguments. There are three types of arguments: `anonymous` args, `named` args (--), and `flag` args (-). To see how ReactBash parses the input, check out this fictional example that utilizes all three in order.
 
-For the input `foo some/path --bar -hello world`, ReactBash would parse the input as:
+For the input `foo some/path -baz --hello world`, ReactBash would parse the input as:
 ```js
 command = 'foo'
 args = {
     0: 'some/path',
-    bar: true,
-    hello: 'world'
+    hello: 'world',
+    flags: { b: true, a: true, z: true },
 }
 ```
 
