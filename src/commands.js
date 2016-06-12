@@ -22,7 +22,7 @@ export const clear = {
 };
 
 export const ls = {
-    exec: (state, args) => {
+    exec: (state, { flags, args }) => {
         const path = args[0] || '';
         const fullPath = Util.extractPath(path, state.cwd);
         const { err, dir } = Util.getDirectoryByPath(state.structure, fullPath);
@@ -31,10 +31,10 @@ export const ls = {
             return Util.appendError(state, err, path);
         } else {
             let content = Object.keys(dir);
-            if (!args.$flags.a) {
+            if (!flags.a) {
                 content = content.filter(name => name[0] !== '.');
             }
-            if (args.$flags.l) {
+            if (flags.l) {
                 return Object.assign({}, state, {
                     history: state.history.concat(content.map(value => {
                         return { value };
@@ -50,7 +50,7 @@ export const ls = {
 };
 
 export const cat = {
-    exec: (state, args) => {
+    exec: (state, { args }) => {
         const path = args[0];
         const relativePath = path.split('/');
         const fileName = relativePath.pop();
@@ -73,7 +73,7 @@ export const cat = {
 };
 
 export const mkdir = {
-    exec: (state, args) => {
+    exec: (state, { args }) => {
         const path = args[0];
         const relativePath = path.split('/');
         const newDirectory = relativePath.pop();
@@ -91,7 +91,7 @@ export const mkdir = {
 };
 
 export const cd = {
-    exec: (state, args) => {
+    exec: (state, { args }) => {
         const path = args[0];
         if (!path || path === '/') {
             return Object.assign({}, state, { cwd: '' });
@@ -118,10 +118,10 @@ export const pwd = {
 };
 
 export const echo = {
-    exec: (state, { $input }) => {
+    exec: (state, { input }) => {
         const ECHO_LENGTH = 'echo '.length;
         const envVariables = Util.getEnvVariables(state);
-        const value = $input.slice(ECHO_LENGTH).replace(/(\$\w+)/g, key => {
+        const value = input.slice(ECHO_LENGTH).replace(/(\$\w+)/g, key => {
             return envVariables[key.slice(1)] || '';
         });
         return Object.assign({}, state, {

@@ -26,7 +26,7 @@ The `extension` prop is an easy way to extend the bash commands that can be pars
 import Terminal from 'react-bash';
 
 export const clear = {
-    exec: ({ structure, history, cwd }, args) => {
+    exec: ({ structure, history, cwd }, command) => {
         return { structure, cwd, history: [] };
     },
 };
@@ -35,15 +35,18 @@ const extensions = { clear };
 <Terminal extensions={extensions} />
 ```
 
-Each command is given the `state` and a parsed `args` object. Some commands can use optional or required arguments. There are three types of arguments: `anonymous` args, `named` args (--), and `flag` args (-). To see how ReactBash parses the input, check out this fictional example that utilizes all three in order.
+Each command is given the `state` and a parsed `command` object. The command object provides the `name`, `input`, `args`, and `flags` corresponding to the input. Some commands can use optional or required arguments. There are three types of args: `anonymous` args, `named` args (--), and `flag` args (-). To see how ReactBash parses the input.
 
 For the input `foo some/path -baz --hello world`, ReactBash would parse the input as:
 ```js
-command = 'foo'
-args = {
+{
+  command = 'foo'
+  input: 'foo some/path -baz --hello world',
+  args: {
     0: 'some/path',
     hello: 'world',
-    flags: { b: true, a: true, z: true },
+  },
+  flags: { b: true, a: true, z: true },
 }
 ```
 

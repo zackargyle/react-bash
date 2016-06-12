@@ -8,8 +8,9 @@
  */
 export function parseInput(input) {
     const tokens = input.split(/ +/);
-    const command = tokens.shift();
-    const args = { $flags: {}, $input: input };
+    const name = tokens.shift();
+    const flags = {};
+    const args = {};
     let anonArgPos = 0;
 
     while (tokens.length > 0) {
@@ -19,16 +20,15 @@ export function parseInput(input) {
                 const next = tokens.shift();
                 args[token.slice(2)] = next;
             } else {
-                const flags = token.slice(1).split('');
-                flags.forEach(flag => {
-                    args.$flags[flag] = true;
+                token.slice(1).split('').forEach(flag => {
+                    flags[flag] = true;
                 });
             }
         } else {
             args[anonArgPos++] = token;
         }
     }
-    return { command, args };
+    return { name, flags, input, args };
 }
 
 /*
