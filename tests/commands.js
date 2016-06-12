@@ -52,7 +52,7 @@ describe('bash commands', () => {
             const expected = Object.keys(state.structure)
                 .filter(name => name[0] !== '.')
                 .join(' ');
-            const { history } = bash.commands.ls.exec(state, { $flags: {} });
+            const { history } = bash.commands.ls.exec(state, { flags: {}, args: {} });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -60,8 +60,8 @@ describe('bash commands', () => {
         it('should handle --all arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure).join(' ');
-            const args = { $flags: { a: true } };
-            const { history } = bash.commands.ls.exec(state, args);
+            const command = { flags: { a: true }, args: {} };
+            const { history } = bash.commands.ls.exec(state, command);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -69,16 +69,16 @@ describe('bash commands', () => {
         it('should handle --long arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure).length;
-            const args = { $flags: { a: true, l: true } };
-            const { history } = bash.commands.ls.exec(state, args);
+            const command = { flags: { a: true, l: true }, args: {} };
+            const { history } = bash.commands.ls.exec(state, command);
             chai.assert.strictEqual(history.length, expected);
         });
 
         it('should handle a valid path arg', () => {
             const state = stateFactory();
             const expected = Object.keys(state.structure.dir1).join(' ');
-            const args = { $flags: {}, 0: 'dir1' };
-            const { history } = bash.commands.ls.exec(state, args);
+            const command = { flags: {}, args: { 0: 'dir1' } };
+            const { history } = bash.commands.ls.exec(state, command);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -86,8 +86,8 @@ describe('bash commands', () => {
         it('should handle a non existent path', () => {
             const state = stateFactory();
             const expected = Errors.NO_SUCH_FILE.replace('$1', 'doesNotExist');
-            const args = { $flags: {}, 0: 'doesNotExist' };
-            const { history } = bash.commands.ls.exec(state, args);
+            const command = { flags: {}, args: { 0: 'doesNotExist' } };
+            const { history } = bash.commands.ls.exec(state, command);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -95,8 +95,8 @@ describe('bash commands', () => {
         it('should handle path to file', () => {
             const state = stateFactory();
             const expected = Errors.NOT_A_DIRECTORY.replace('$1', 'file1');
-            const args = { $flags: {}, 0: 'file1' };
-            const { history } = bash.commands.ls.exec(state, args);
+            const command = { flags: {}, args: { 0: 'file1' } };
+            const { history } = bash.commands.ls.exec(state, command);
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -112,7 +112,7 @@ describe('bash commands', () => {
         it('should display file contents', () => {
             const state = stateFactory();
             const expected = state.structure.file1.content;
-            const { history } = bash.commands.cat.exec(state, { 0: 'file1' });
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'file1' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -120,7 +120,7 @@ describe('bash commands', () => {
         it('should display file contents from path', () => {
             const state = stateFactory();
             const expected = state.structure.dir1.dir1File.content;
-            const { history } = bash.commands.cat.exec(state, { 0: 'dir1/dir1File' });
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'dir1/dir1File' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -128,7 +128,7 @@ describe('bash commands', () => {
         it('should not work for directories', () => {
             const state = stateFactory();
             const expected = Errors.IS_A_DIRECTORY.replace('$1', 'dir1');
-            const { history } = bash.commands.cat.exec(state, { 0: 'dir1' });
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'dir1' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -136,7 +136,7 @@ describe('bash commands', () => {
         it('should not work for invalid paths', () => {
             const state = stateFactory();
             const expected = Errors.NO_SUCH_FILE.replace('$1', 'doesNotExist');
-            const { history } = bash.commands.cat.exec(state, { 0: 'doesNotExist' });
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'doesNotExist' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -144,7 +144,7 @@ describe('bash commands', () => {
         it('should not work for nested invalid paths', () => {
             const state = stateFactory();
             const expected = Errors.NO_SUCH_FILE.replace('$1', 'dir1/doesNotExist');
-            const { history } = bash.commands.cat.exec(state, { 0: 'dir1/doesNotExist' });
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'dir1/doesNotExist' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -152,7 +152,7 @@ describe('bash commands', () => {
         it('should not work for directory paths', () => {
             const state = stateFactory();
             const expected = Errors.IS_A_DIRECTORY.replace('$1', 'dir1/childDir');
-            const { history } = bash.commands.cat.exec(state, { 0: 'dir1/childDir' });
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'dir1/childDir' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -168,14 +168,14 @@ describe('bash commands', () => {
         it('should create a new directory', () => {
             const state = stateFactory();
             chai.assert.isUndefined(state.structure.testDir);
-            const { structure } = bash.commands.mkdir.exec(state, { 0: 'testDir' });
+            const { structure } = bash.commands.mkdir.exec(state, { args: { 0: 'testDir' } });
             chai.assert.isDefined(structure.testDir);
         });
 
         it('should create a new directory at path', () => {
             const state = stateFactory();
             chai.assert.isUndefined(state.structure.dir1.testDir);
-            const { structure } = bash.commands.mkdir.exec(state, { 0: 'dir1/testDir' });
+            const { structure } = bash.commands.mkdir.exec(state, { args: { 0: 'dir1/testDir' } });
             chai.assert.isDefined(structure.dir1.testDir);
         });
 
@@ -183,7 +183,7 @@ describe('bash commands', () => {
             const state = stateFactory();
             const expected = Errors.FILE_EXISTS.replace('$1', 'dir1');
             chai.assert.isDefined(state.structure.dir1);
-            const { history } = bash.commands.mkdir.exec(state, { 0: 'dir1' });
+            const { history } = bash.commands.mkdir.exec(state, { args: { 0: 'dir1' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -192,7 +192,7 @@ describe('bash commands', () => {
             const state = stateFactory();
             const expected = Errors.FILE_EXISTS.replace('$1', 'dir1/childDir');
             chai.assert.isDefined(state.structure.dir1);
-            const { history } = bash.commands.mkdir.exec(state, { 0: 'dir1/childDir' });
+            const { history } = bash.commands.mkdir.exec(state, { args: { 0: 'dir1/childDir' } });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, expected);
         });
@@ -208,34 +208,34 @@ describe('bash commands', () => {
         it('should work with no args', () => {
             const state = stateFactory();
             state.cwd = 'dir1';
-            const { cwd } = bash.commands.cd.exec(state, {});
+            const { cwd } = bash.commands.cd.exec(state, { args: {} });
             chai.assert.strictEqual(cwd, '');
         });
 
         it('should work with path', () => {
             const state = stateFactory();
-            const { cwd } = bash.commands.cd.exec(state, { 0: 'dir1/childDir' });
+            const { cwd } = bash.commands.cd.exec(state, { args: { 0: 'dir1/childDir' } });
             chai.assert.strictEqual(cwd, 'dir1/childDir');
         });
 
         it('should work with ..', () => {
             const state = stateFactory();
             state.cwd = 'dir1/childDir';
-            const { cwd } = bash.commands.cd.exec(state, { 0: '..' });
+            const { cwd } = bash.commands.cd.exec(state, { args: { 0: '..' } });
             chai.assert.strictEqual(cwd, 'dir1');
         });
 
         it('should work with multiple ..', () => {
             const state = stateFactory();
             state.cwd = 'dir1/childDir';
-            const { cwd } = bash.commands.cd.exec(state, { 0: '../../' });
+            const { cwd } = bash.commands.cd.exec(state, { args: { 0: '../../' } });
             chai.assert.strictEqual(cwd, '');
         });
 
         it('should work with back and forth', () => {
             const state = stateFactory();
             state.cwd = 'dir1/childDir';
-            const { cwd } = bash.commands.cd.exec(state, { 0: '../childDir' });
+            const { cwd } = bash.commands.cd.exec(state, { args: { 0: '../childDir' } });
             chai.assert.strictEqual(cwd, 'dir1/childDir');
         });
 
@@ -271,25 +271,25 @@ describe('bash commands', () => {
         });
 
         it('should print out empty arguments', () => {
-            const { history } = bash.commands.echo.exec(state, { $input: 'echo' });
+            const { history } = bash.commands.echo.exec(state, { input: 'echo' });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, '');
         });
 
         it('should print out arguments', () => {
-            const { history } = bash.commands.echo.exec(state, { $input: 'echo foo bar' });
+            const { history } = bash.commands.echo.exec(state, { input: 'echo foo bar' });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, 'foo bar');
         });
 
         it('should print out static environment variables', () => {
-            const { history } = bash.commands.echo.exec(state, { $input: 'echo $HOME' });
+            const { history } = bash.commands.echo.exec(state, { input: 'echo $HOME' });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, '/');
         });
 
         it('should print out dynamic environment variables', () => {
-            const { history } = bash.commands.echo.exec(state, { $input: 'echo $PWD' });
+            const { history } = bash.commands.echo.exec(state, { input: 'echo $PWD' });
             chai.assert.strictEqual(history.length, 1);
             chai.assert.strictEqual(history[0].value, `/${state.cwd}`);
         });

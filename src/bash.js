@@ -53,16 +53,16 @@ export default class Bash {
          * occurred. If an error occurs, the following dependent commands should
          * not be run.
          */
-        const reducer = (newState, { command, args }) => {
-            if (command === '') {
+        const reducer = (newState, command) => {
+            if (command.name === '') {
                 return newState;
-            } else if (this.commands[command]) {
-                const nextState = this.commands[command].exec(newState, args);
+            } else if (this.commands[command.name]) {
+                const nextState = this.commands[command.name].exec(newState, command);
                 errorOccurred = errorOccurred || (nextState && nextState.error);
                 return nextState;
             } else {
                 errorOccurred = true;
-                return Util.appendError(newState, Errors.COMMAND_NOT_FOUND, command);
+                return Util.appendError(newState, Errors.COMMAND_NOT_FOUND, command.name);
             }
         };
 
