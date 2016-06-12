@@ -13,11 +13,12 @@ const noop = () => {};
 
 export default class Terminal extends Component {
 
-    constructor({ history, structure, extensions }) {
+    constructor({ history, structure, extensions, prefix }) {
         super();
         this.Bash = new Bash(extensions);
         this.ctrlPressed = false;
         this.state = {
+            settings: { user: { username: prefix.split('@')[1] } },
             history: history.slice(),
             structure: Object.assign({}, structure),
             cwd: '',

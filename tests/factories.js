@@ -1,6 +1,7 @@
 
 export function stateFactory(state = {}) {
     return {
+        settings: { user: { username: 'default' } },
         cwd: state.cwd || '',
         structure: state.structure || {
             '.privateDir': {

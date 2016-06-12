@@ -2,6 +2,7 @@ import chai from 'chai';
 import { stateFactory } from './factories';
 import * as Util from '../src/util';
 import { Errors } from '../src/const';
+import PACKAGE from '../package.json';
 
 const state = stateFactory();
 
@@ -99,6 +100,30 @@ describe('util method', () => {
             const path = 'dir1/doesNotExist';
             const { err } = Util.getDirectoryByPath(state.structure, path);
             chai.assert.strictEqual(err, Errors.NO_SUCH_FILE.replace('$1', path));
+        });
+
+    });
+
+    describe('getEnvVariables', () => {
+
+        it('should exist', () => {
+            chai.assert.isFunction(Util.getEnvVariables);
+        });
+
+        it('should return the static env variables', () => {
+            const envVariables = Util.getEnvVariables(state);
+            chai.assert.strictEqual(envVariables.TERM_PROGRAM, 'ReactBash.app');
+        });
+
+        it('should return the dynamic env variables', () => {
+            const envVariables = Util.getEnvVariables(state);
+            chai.assert.strictEqual(envVariables.USER, state.settings.user.username);
+            chai.assert.strictEqual(envVariables.PWD, `/${state.cwd}`);
+        });
+
+        it('should match the correct react-bash version', () => {
+            const envVariables = Util.getEnvVariables(state);
+            chai.assert.strictEqual(envVariables.TERM_PROGRAM_VERSION, PACKAGE.version);
         });
 
     });

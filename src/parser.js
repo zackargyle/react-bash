@@ -9,7 +9,7 @@
 export function parseInput(input) {
     const tokens = input.split(/ +/);
     const command = tokens.shift();
-    const args = { flags: {} };
+    const args = { $flags: {}, $input: input };
     let anonArgPos = 0;
 
     while (tokens.length > 0) {
@@ -21,7 +21,7 @@ export function parseInput(input) {
             } else {
                 const flags = token.slice(1).split('');
                 flags.forEach(flag => {
-                    args.flags[flag] = true;
+                    args.$flags[flag] = true;
                 });
             }
         } else {
