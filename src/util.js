@@ -1,4 +1,4 @@
-import { Errors, BACK_REGEX } from './const';
+import { Errors, BACK_REGEX, EnvVariables } from './const';
 
 /*
  * This is a utility method for trimming the beginning
@@ -92,4 +92,19 @@ export function getDirectoryByPath(structure, relativePath) {
         i++;
     }
     return { dir };
+}
+
+/*
+ * This is a utility method for getting the environment
+ * variables with the dynamic values updated with state.
+ *
+ * @param {Object} state - the terminal state
+ * @returns {Object} the updated env variables
+ */
+export function getEnvVariables(state) {
+    return Object.keys(EnvVariables).reduce((envVars, key) => {
+        const value = EnvVariables[key];
+        envVars[key] = typeof value === 'function' ? value(state) : value;
+        return envVars;
+    }, {});
 }
