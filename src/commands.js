@@ -22,12 +22,6 @@ export const clear = {
 };
 
 export const ls = {
-    aliases: {
-        '-l': '--long',
-        '-la': ['--long', '--all'],
-        '-al': ['--long', '--all'],
-        '-a': '--all',
-    },
     exec: (state, args) => {
         const { history, structure, cwd } = state;
         const path = args[0] || '';
@@ -35,13 +29,13 @@ export const ls = {
         const { err, dir } = Util.getDirectoryByPath(structure, fullPath);
 
         if (err) {
-            return Util.reportError(state, err, path);
+            return Util.appendError(state, err, path);
         } else {
             let content = Object.keys(dir);
-            if (!args.all) {
+            if (!args.flags.a) {
                 content = content.filter(name => name[0] !== '.');
             }
-            if (args.long) {
+            if (args.flags.l) {
                 return { structure, cwd,
                     history: history.concat(content.map(value => {
                         return { value };
@@ -65,11 +59,11 @@ export const cat = {
         const fullPath = Util.extractPath(relativePath.join('/'), cwd);
         const { err, dir } = Util.getDirectoryByPath(structure, fullPath);
         if (err) {
-            return Util.reportError(state, err, path);
+            return Util.appendError(state, err, path);
         } else if (!dir[fileName]) {
-            return Util.reportError(state, Errors.NO_SUCH_FILE, path);
+            return Util.appendError(state, Errors.NO_SUCH_FILE, path);
         } else if (!dir[fileName].hasOwnProperty('content')) {
-            return Util.reportError(state, Errors.IS_A_DIRECTORY, path);
+            return Util.appendError(state, Errors.IS_A_DIRECTORY, path);
         } else {
             return { cwd, structure,
                 history: history.concat({
@@ -91,7 +85,7 @@ export const mkdir = {
         const { dir } = Util.getDirectoryByPath(deepCopy, fullPath);
 
         if (dir[newDirectory]) {
-            return Util.reportError(state, Errors.FILE_EXISTS, path);
+            return Util.appendError(state, Errors.FILE_EXISTS, path);
         } else {
             dir[newDirectory] = {};
             return { cwd, history, structure: deepCopy };
@@ -111,7 +105,7 @@ export const cd = {
         const { err } = Util.getDirectoryByPath(structure, fullPath);
 
         if (err) {
-            return Util.reportError(state, err, path);
+            return Util.appendError(state, err, path);
         } else {
             return { history, structure, cwd: fullPath };
         }
