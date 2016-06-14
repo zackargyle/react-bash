@@ -300,12 +300,27 @@ describe('bash commands', () => {
         const state = stateFactory();
 
         it('should exist', () => {
-            chai.assert.isFunction(bash.commands.echo.exec);
+            chai.assert.isFunction(bash.commands.printenv.exec);
         });
 
         it('should print out the environment variables', () => {
             const { history } = bash.commands.printenv.exec(state, {});
             chai.assert.strictEqual(history.length, Object.keys(EnvVariables).length);
+        });
+
+    });
+
+    describe('whoami', () => {
+        const state = stateFactory();
+
+        it('should exist', () => {
+            chai.assert.isFunction(bash.commands.whoami.exec);
+        });
+
+        it('should print out the environment variables', () => {
+            const { history } = bash.commands.whoami.exec(state, {});
+            chai.assert.strictEqual(history.length, 1);
+            chai.assert.strictEqual(history[0].value, state.settings.user.username);
         });
 
     });

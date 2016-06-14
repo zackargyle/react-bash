@@ -1,7 +1,7 @@
 import * as Util from './util';
 import { Errors } from './const';
 
-const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd', 'echo', 'printenv'];
+const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd', 'echo', 'printenv', 'whoami'];
 
 export const help = {
     exec: (state) => {
@@ -138,6 +138,15 @@ export const printenv = {
         });
         return Object.assign({}, state, {
             history: state.history.concat(values),
+        });
+    },
+};
+
+export const whoami = {
+    exec: (state) => {
+        const value = state.settings.user.username;
+        return Object.assign({}, state, {
+            history: state.history.concat({ value }),
         });
     },
 };

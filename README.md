@@ -19,6 +19,20 @@ prop         | description
 `theme`      | A string representing which `theme` to use (Terminal.Themes.LIGHT, Terminal.Themes.DARK)
 `prefix`     | The string used to prefix commands in history: defaults to `hacker@default`
 
+### Currently supported commands and args
+command      | args/flags | description
+------------ | args/flags | -----------
+`help`       |            | lists all available commands
+`clear`      |            | clears history
+`ls`         | path       | lists all file and dirs at path or `cwd`
+`cat`        | path/file  | prints out the contents of a file
+`mkdir`      | path/dir   | makes a new dir at path
+`cd`         | path       | change directory to relative path
+`pwd`        |            | prints out the `cwd`
+`echo`       | any        | prints out all args with env variables
+`printenv`   |            | prints out env variables
+`whoami`     |            | prints out current user's username
+
 ### Extending the command list
 The `extension` prop is an easy way to extend the bash commands that can be parsed from the terminal input. In essence, each command is a state reducer returning a new terminal state. This provides a lot of flexibility. Each command has access to the `structure`, `history`, and `cwd`, and expects the object returned to be applied in `setState` of the React component. Note that each extension should keep the state immutable, otherwise the component will not update. If we were to extend the commands with and existing command like 'clear, here's how we could do it.
 
@@ -94,10 +108,7 @@ script         | description
 >✌⊂(✰‿✰)つ✌
 
 **Some ideas for contributions:**
-* Add `echo` command with environment variables?
 * Add `grep` command that walks/searches the `structure`
-* Add `whoami` command
-* Add handles for the three circles at the top left of the terminal
 * Add multiline support / text formatting for `cat`
 
 ## License
