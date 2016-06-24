@@ -52,7 +52,7 @@ export default class Terminal extends Component {
     }
 
     /*
-     * Grab last word and attempt to autocomplete. If it works,
+     * Forward the input along to the Bash autocompleter. If it works,
      * update the input.
      */
     attemptAutocomplete() {
