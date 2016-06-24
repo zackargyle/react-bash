@@ -1,16 +1,20 @@
 var webpack = require('webpack');
 
-var reactExternal = {
-    root: 'React',
-    commonjs2: 'react',
-    commonjs: 'react',
-    amd: 'react'
-};
-
 var env = process.env.NODE_ENV;
 var config = {
     externals: {
-        react: reactExternal
+        react: {
+            root: 'React',
+            commonjs2: 'react',
+            commonjs: 'react',
+            amd: 'react'
+        },
+        'react-dom': {
+            root: 'ReactDOM',
+            commonjs2: 'react-dom',
+            commonjs: 'react-dom',
+            amd: 'react-dom'
+        }
     },
     module: {
         loaders: [
