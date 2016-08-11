@@ -31,10 +31,18 @@ export default class Terminal extends Component {
         this.refs.input.focus();
     }
 
-    componentWillReceiveProps(props) {
-        if (props.extensions) {
-            this.Bash.commands = Object.assign(props.extensions, BaseCommands);
+    componentWillReceiveProps({ extensions, structure, history }) {
+        const updatedState = {};
+        if (structure) {
+            updatedState.structure = Object.assign({}, structure);
         }
+        if (history) {
+            updatedState.history = history.slice();
+        }
+        if (extensions) {
+            this.Bash.commands = Object.assign({}, extensions, BaseCommands);
+        }
+        this.setState(updatedState);
     }
 
     /*

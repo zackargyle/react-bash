@@ -47,6 +47,24 @@ describe('ReactBash component', () => {
             chai.assert.deepEqual(historyPrefix.text(), expected);
             chai.assert.deepEqual(formPrefix.text(), expected);
         });
+
+        it('should update the structure with new props', () => {
+            const structure1 = { dir1: {}, file1: { content: 'Foo1' } };
+            const structure2 = { dir2: {}, file2: { content: 'Foo2' } };
+            const wrapper = shallow(<Terminal structure={structure1} />);
+            chai.assert.deepEqual(wrapper.state().structure, structure1);
+            wrapper.setProps({ structure: structure2 });
+            chai.assert.deepEqual(wrapper.state().structure, structure2);
+        });
+
+        it('should update the history with new props', () => {
+            const history1 = [{ value: 'Foo1' }];
+            const history2 = [{ value: 'Foo2' }];
+            const wrapper = shallow(<Terminal history={history1} />);
+            chai.assert.deepEqual(wrapper.state().history, history1);
+            wrapper.setProps({ history: history2 });
+            chai.assert.deepEqual(wrapper.state().history, history2);
+        });
     });
 
     describe('autocomplete', () => {

@@ -47,6 +47,7 @@
     "mocha": "^2.2.5",
     "react": "^0.14.8",
     "react-addons-test-utils": "^15.1.0",
+    "react-dom": "^15.3.0",
     "rimraf": "^2.5.2",
     "sinon": "^1.17.4",
     "webpack": "^1.12.13",
