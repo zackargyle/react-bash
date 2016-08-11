@@ -21,7 +21,7 @@ prop         | description
 
 ### Currently supported commands and args
 command      | args/flags | description
------------- | args/flags | -----------
+------------ | ---------- | -----------
 `help`       |            | lists all available commands
 `clear`      |            | clears history
 `ls`         | path       | lists all file and dirs at path or `cwd`
