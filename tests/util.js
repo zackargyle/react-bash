@@ -128,4 +128,20 @@ describe('util method', () => {
 
     });
 
+    describe('isFile', () => {
+
+        it('should exist', () => {
+            chai.assert.isFunction(Util.isFile);
+        });
+
+        it('Should return true when given a file', () => {
+            chai.assert.isTrue(Util.isFile(state.structure.file1));
+        });
+
+        it('Should return false when given a folder', () => {
+            chai.assert.isFalse(Util.isFile(state.structure.dir1));
+        });
+
+    });
+
 });
