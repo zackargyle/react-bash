@@ -108,3 +108,14 @@ export function getEnvVariables(state) {
         return envVars;
     }, {});
 }
+
+/*
+ * This is a utility method for determining if a given filesystem entry is a
+ * file or directoy.
+ *
+ * @param {Object} entry - the filesystem entry
+ * @returns {Boolean} whether the entry is a file
+ */
+export function isFile(entry) {
+    return entry.content !== undefined;
+}

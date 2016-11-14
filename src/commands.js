@@ -1,7 +1,7 @@
 import * as Util from './util';
 import { Errors } from './const';
 
-const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd', 'echo', 'printenv', 'whoami'];
+const helpCommands = ['clear', 'ls', 'cat', 'mkdir', 'cd', 'pwd', 'echo', 'printenv', 'whoami', 'rm'];
 
 export const help = {
     exec: (state) => {
@@ -148,5 +148,27 @@ export const whoami = {
         return Object.assign({}, state, {
             history: state.history.concat({ value }),
         });
+    },
+};
+
+export const rm = {
+    exec: (state, { flags, args }) => {
+        const path = args[0];
+        const relativePath = path.split('/');
+        const file = relativePath.pop();
+        const fullPath = Util.extractPath(relativePath.join('/'), state.cwd);
+        const deepCopy = JSON.parse(JSON.stringify(state.structure));
+        const { dir } = Util.getDirectoryByPath(deepCopy, fullPath);
+
+        if (dir[file]) {
+            // folder deletion requires the recursive flags `-r` or `-R`
+            if (!Util.isFile(dir[file]) && !(flags.r || flags.R)) {
+                return Util.appendError(state, Errors.IS_A_DIRECTORY, path);
+            }
+            delete dir[file];
+            return Object.assign({}, state, { structure: deepCopy });
+        } else {
+            return Util.appendError(state, Errors.NO_SUCH_FILE, path);
+        }
     },
 };

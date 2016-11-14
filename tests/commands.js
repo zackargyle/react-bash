@@ -325,4 +325,39 @@ describe('bash commands', () => {
 
     });
 
+    describe('rm', () => {
+
+        it('should exist', () => {
+            chai.assert.isFunction(bash.commands.rm.exec);
+        });
+
+        it('should delete files with the default command', () => {
+            const state = stateFactory();
+            chai.assert.isDefined(state.structure.file1);
+            const { structure } = bash.commands.rm.exec(state, { args: { 0: 'file1' }, flags: { } });
+            chai.assert.isUndefined(structure.file1);
+        });
+
+        it('should not delete a folder without the appropriate flags', () => {
+            const state = stateFactory();
+            chai.assert.isDefined(state.structure.dir1);
+            const { structure } = bash.commands.rm.exec(state, { args: { 0: 'dir1' }, flags: { } });
+            chai.assert.isDefined(structure.dir1);
+        });
+
+        it('should delete a folder with -r', () => {
+            const state = stateFactory();
+            chai.assert.isDefined(state.structure.dir1);
+            const { structure } = bash.commands.rm.exec(state, { args: { 0: 'dir1' }, flags: { r: true } });
+            chai.assert.isUndefined(structure.dir1);
+        });
+
+        it('should delete a folder with -R', () => {
+            const state = stateFactory();
+            chai.assert.isDefined(state.structure.dir1);
+            const { structure } = bash.commands.rm.exec(state, { args: { 0: 'dir1' }, flags: { R: true } });
+            chai.assert.isUndefined(structure.dir1);
+        });
+    });
+
 });
