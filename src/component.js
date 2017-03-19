@@ -141,9 +141,9 @@ export default class Terminal extends Component {
     }
 
     render() {
-        const { onClose, onExpand, onMinimize, prefix, theme } = this.props;
+        const { onClose, onExpand, onMinimize, prefix, styles, theme } = this.props;
         const { history, cwd } = this.state;
-        const style = Styles[theme] || Styles.light;
+        const style = Object.assign({}, Styles[theme] || Styles.light, styles);
         return (
             <div className="ReactBash" style={style.ReactBash}>
                 <div style={style.header}>
@@ -182,6 +182,7 @@ Terminal.propTypes = {
     onMinimize: PropTypes.func,
     prefix: PropTypes.string,
     structure: PropTypes.object,
+    styles: PropTypes.object,
     theme: PropTypes.string,
 };
 
@@ -193,5 +194,6 @@ Terminal.defaultProps = {
     onMinimize: noop,
     prefix: 'hacker@default',
     structure: {},
+    styles: {},
     theme: Terminal.Themes.LIGHT,
 };

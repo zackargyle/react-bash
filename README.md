@@ -17,6 +17,7 @@ prop         | description
 `history`    | An array of initial history items
 `structure`  | An object representing the file system
 `theme`      | A string representing which `theme` to use (Terminal.Themes.LIGHT, Terminal.Themes.DARK)
+`styles`     | An object overriding the theme styles passed to each section
 `prefix`     | The string used to prefix commands in history: defaults to `hacker@default`
 
 ### Currently supported commands and args
