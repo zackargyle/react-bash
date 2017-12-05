@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import * as BaseCommands from './commands';
 import Bash from './bash';
 import Styles from './styles';
