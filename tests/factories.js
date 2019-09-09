@@ -9,6 +9,7 @@ export function stateFactory(state = {}) {
             },
             '.privateFile': { content: 'Private File contents' },
             file1: { content: 'file1' },
+            multilinefile1: { content: 'file2\nhasfour\nnewlines\n \n' },
             dir1: {
                 childDir: {
                     childDirFile: { content: 'childDirFile' },

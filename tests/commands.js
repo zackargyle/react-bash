@@ -117,6 +117,19 @@ describe('bash commands', () => {
             chai.assert.strictEqual(history[0].value, expected);
         });
 
+        it('should display multiline file contents', () => {
+            const state = stateFactory();
+            const expected = [
+                'file2',
+                'hasfour',
+                'newlines',
+                ' ',
+            ];
+            const { history } = bash.commands.cat.exec(state, { args: { 0: 'multilinefile1' } });
+            chai.assert.strictEqual(history.length, 4);
+            chai.assert.deepEqual(history.map(h => h.value), expected);
+        });
+
         it('should display file contents from path', () => {
             const state = stateFactory();
             const expected = state.structure.dir1.dir1File.content;

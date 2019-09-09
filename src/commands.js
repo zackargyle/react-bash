@@ -63,10 +63,10 @@ export const cat = {
         } else if (!dir[fileName].hasOwnProperty('content')) {
             return Util.appendError(state, Errors.IS_A_DIRECTORY, path);
         } else {
+            const content = dir[fileName].content.replace(/\n$/, '');
+            const lines = content.split('\n').map(value => ({ value }));
             return Object.assign({}, state, {
-                history: state.history.concat({
-                    value: dir[fileName].content,
-                }),
+                history: state.history.concat(lines),
             });
         }
     },
